@@ -1,0 +1,62 @@
+# Lines that start with '#' are comments.
+# For a complete gitignore templates please check out https://github.com/github/gitignore 
+
+.DS_Store
+
+# Vim
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
+
+#
+build
+product
+tmp
+obj/
+libs/
+
+# XCode
+xcuserdata/
+DerivedData/
+
+# CMake 
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+cmake_install.cmake
+install_manifest.txt
+flascc/build
+
+# C++
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
