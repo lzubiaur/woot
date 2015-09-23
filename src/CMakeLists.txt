@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.3)
 ###############################################################################
 # WOOT - Lua Game Engine
 # Copyright Laurent Zubiaur 2015 - voodoocactus.com

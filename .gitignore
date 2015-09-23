@@ -2,6 +2,7 @@
 # For a complete gitignore templates please check out https://github.com/github/gitignore 
 
 .DS_Store
+*.bak
 
 # Vim
 [._]*.s[a-w][a-z]

@@ -8,6 +8,7 @@ add_executable(test_luajit luajit.c)
 target_link_libraries(test_luajit liblua)
 if(BUILD_OSX)
     # set_target_properties(test_luajit PROPERTIES MACOSX_BUNDLE true)
+    # See luajit.org/install.html for flags
     set_target_properties(test_luajit PROPERTIES LINK_FLAGS "-pagezero_size 10000 -image_base 100000000")
 endif(BUILD_OSX)
 
