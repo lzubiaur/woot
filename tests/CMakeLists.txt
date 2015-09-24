@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 cmake_minimum_required(VERSION 3.0)
-=======
-cmake_minimum_required(VERSION 3.3)
->>>>>>> 908bba987937c7c8cb3349f6d6600fe17560cb5f
 project(tests)
 
 include_directories(${GLFW_HEADERS})
