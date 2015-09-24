@@ -1,0 +1,8 @@
+Tested on "Linux debian 3.16 i686"
+
+Dependencies - Required packages
+cmake gcc g++ git-core build-essential 
+libgl1-mesa-dev libglu1-mesa-dev xorg-dev
+
+sudo apt-get install cmake
+sudo apt-get install g++
