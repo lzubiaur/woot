@@ -14,7 +14,7 @@ Session.vim
 
 #
 build
-product
+products
 tmp
 obj/
 
