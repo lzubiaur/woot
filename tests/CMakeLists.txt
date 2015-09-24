@@ -1,15 +1,17 @@
-cmake_minimum_required(VERSION 3.3)
-project(tests CXX)
+cmake_minimum_required(VERSION 3.0)
+project(tests)
 
 # include_directories(${LUA_HEADERS})
 
 add_executable(test_luajit luajit.c)
-# target_link_libraries(test_luajit liblua)
 target_link_libraries(test_luajit liblua)
 if(BUILD_OSX)
     # set_target_properties(test_luajit PROPERTIES MACOSX_BUNDLE true)
     # See luajit.org/install.html for flags
     set_target_properties(test_luajit PROPERTIES LINK_FLAGS "-pagezero_size 10000 -image_base 100000000")
+elseif(BUILD_LINUX)
+   message("BUILD_LINUX DEBUG")
+   target_link_libraries(test_luajit pthread rt dl)
 endif(BUILD_OSX)
 
 set(APPS ${CMAKE_CURRENT_BINARY_DIR}/test_luajit.app)

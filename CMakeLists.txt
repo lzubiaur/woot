@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.0)
 project(woot)
 
 set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/products) 

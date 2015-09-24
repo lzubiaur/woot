@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.0)
 
 set(LUAJIT_ROOT "${PROJECT_SOURCE_DIR}/luajit-2.0")
 set(LUAJIT_INCLUDE "${LUAJIT_ROOT}/src")
