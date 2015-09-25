@@ -12,7 +12,8 @@ cd build-osx
 
 #    -DCMAKE_INSTALL_PREFIX=$libprefix \
 
-cmake -G "Xcode" \
+# cmake -G "Xcode" \
+cmake \
     -DBUILD_OSX=TRUE \
     -DCMAKE_BUILD_TYPE=Release \
     ../..
