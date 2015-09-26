@@ -68,7 +68,7 @@ char *get_exec_path()
         fprintf(stderr, "insufficient memory\n");
         goto error;
     }
-    if ((r = readlink("/proc/self/exe",buf,PATH_MAX)) < 0 ) {
+    if ((r = readlink("/proc/self/exe",buf,PATH_MAX)) < 0 ) {
         perror("get_exec_path");
         goto error;
     }
