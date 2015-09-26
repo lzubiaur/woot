@@ -23,7 +23,8 @@ if(BUILD_OSX)
     set_target_properties(test_luajit test_ffi PROPERTIES LINK_FLAGS "-pagezero_size 10000 -image_base 100000000")
 elseif(BUILD_LINUX)
    message("BUILD_LINUX DEBUG")
-   # TODO check why luajit must link against dl and m (math)
+   # Since LuaJIT is link the static library we need to add the external dependencies  (-lm -ldl)
+   # http://luajit.org/install.html
    target_link_libraries(test_luajit dl m)
 endif(BUILD_OSX)
 
