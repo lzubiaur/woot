@@ -10,8 +10,15 @@ set(WOOT_VERSION_FULL "${WOOT_VERSION}.${WOOT_VERSION_PATCH}${WOOT_VERSION_EXTRA
 
 configure_file("config.h.in" "${PROJECT_BINARY_DIR}/config.h")
 
+include_directories(${GLFW_HEADERS})
+
 add_executable(${PROJECT_NAME} main.c)
 add_dependencies(${PROJECT_NAME} libluajit)
+
+# set_target_properties(${PROJECT_NAME} PROPERTIES ENABLE_EXPORTS true)
+# set(CMAKE_EXE_LINKER_FLAGS "-Wl -E")
+# set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl -E")
+# set(CMAKE_STATIC_LINKER_FLAGS "-Wl -E")
 target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES} liblua)
 
 if(BUILD_OSX)
@@ -24,7 +31,10 @@ elseif(BUILD_LINUX)
    # Since LuaJIT is link the static library we need to add the external dependencies  (-lm -ldl)
    # http://luajit.org/install.html
    target_link_libraries(${PROJECT_NAME} dl m)
+   # export all symbols
+   set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-E")
 endif(BUILD_OSX)
+
 
 # TODO rebase the bundle
 # set(APPS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app)
