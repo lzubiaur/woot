@@ -10,6 +10,8 @@
 #include "lualib.h"
 #include "luajit.h"
 
+#include <GLFW/glfw3.h>
+
 #define LUA_INIT_SCRIPT "main.lua"
 
 static void logversion()
@@ -90,7 +92,7 @@ static int dofile(lua_State *L, const char *name)
   return report(L, status);
 }
 
-static int lmain(lua_State *L)
+static int pmain(lua_State *L)
 {
     /* Load Lua libraries */
     luaL_openlibs(L);
@@ -98,16 +100,25 @@ static int lmain(lua_State *L)
     return dofile(L,LUA_INIT_SCRIPT);
 }
 
+static void error_callback(int error, const char* description)
+{
+    fprintf(stderr, "Error: %s\n", description);
+}
+
 int main(int argc, char **argv)
 {
     int status;
+    // glfwSetErrorCallback(error_callback);
+
+    // glfwInit();
+
     lua_State *L;
     L = luaL_newstate();
     if (!L) {
         fprintf(stderr, "Couldn't create Lua state (not enough memory).");
         return EXIT_FAILURE;
     }
-    status = lua_cpcall(L, lmain, NULL);
+    status = lua_cpcall(L, pmain, NULL);
     lua_close(L);
     return status ? EXIT_FAILURE : EXIT_SUCCESS;
 }
