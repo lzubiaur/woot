@@ -1,8 +1,7 @@
-glfw
+#GLFW
+Optional builds have been disabled (e.g. examples,tests).
 
-Optional builds have been disabled (e.g. examples,tests). See glfw/CMakeLists.txt
-
-OSX RPath Support
+# OSX RPath Support
 
 For debugging purposes, it is useful to know the following:
 
