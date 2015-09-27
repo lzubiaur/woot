@@ -1,8 +1,11 @@
-#include <GLFW/glfw3.h>
-#include <lua.h>
-#include <lauxlib.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+#include "lua.h"
+#include "lauxlib.h"
+#include "lualib.h"
+
+#include "GLFW/glfw3.h"
 
 static void error_callback(int error, const char* description)
 {
@@ -11,7 +14,6 @@ static void error_callback(int error, const char* description)
 
 int main(void)
 {
-    GLFWwindow* window;
     int status, result;
     lua_State *L;
 
