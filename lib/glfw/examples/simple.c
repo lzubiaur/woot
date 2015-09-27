@@ -63,15 +63,6 @@ int main(void)
 
     while (!glfwWindowShouldClose(window))
     {
-        int count;
-        const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
-        for (int i=0; i<count; ++i) {
-            printf("%f",axes[i]);
-        }
-        printf("\n");
-
-        fflush(stdout);
-
         float ratio;
         int width, height;
 
