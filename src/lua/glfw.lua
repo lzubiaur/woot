@@ -1,6 +1,8 @@
 -----------------------------------------------------------
 --  Binding for GLFW v3.1.1
 -----------------------------------------------------------
+-- https://github.com/Playermet/luajit-glfw
+
 local ffi = require 'ffi'
 local jit = require 'jit'
 
