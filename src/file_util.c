@@ -23,18 +23,24 @@
 
 char *get_app_dir()
 {
-    char *path = NULL;
-    char *dir = NULL;
-    if ((path = get_exec_path()) == NULL) {
-        return NULL;
+    char *path = NULL, *dir = NULL, *buf = NULL;
+    if ((path = get_exec_path()) == NULL) goto error;
+    if ((buf = dirname(path)) == NULL) {
+        perror("get_app_dir");
+        goto error;
     }
-    char * buf = dirname(path);
     free(path);
     if ((dir = (char*)malloc(strlen(buf) + 1)) == NULL) {
-        return NULL;
+        fprintf(stderr, "insufficient memory\n");
+        goto error;
     }
     strcpy(dir,buf);
     return dir;
+
+error:
+    free(path);
+    free(dir);
+    return NULL;
 }
 
 /*
@@ -42,32 +48,42 @@ char *get_app_dir()
  */
 char *get_exec_path()
 {
-    char * full_path = NULL;
-    char *buf = NULL;
+    char *full_path = NULL, *buf = NULL;
 #ifdef __APPLE__
     uint32_t size = 0;
     /* First call to get the buffer required size */
     _NSGetExecutablePath(NULL, &size);
-    buf = (char *)malloc(size);
+    if ((buf = (char *)malloc(size)) == NULL) {
+        fprintf(stderr, "insufficient memory\n");
+        goto error;
+    }
     /* Second call to actually get the exec path */
-    _NSGetExecutablePath(buf, &size);
-    /* Get the real absolute path. */
-    full_path = realpath(buf, NULL);
-    free(buf);
+    if (_NSGetExecutablePath(buf, &size) != 0) {
+        fprintf(stderr, "Can't get executable path\n");
+        goto error;
+    }
 #elif defined(__linux__)
     size_t r;
     if ((buf = (char *)malloc(PATH_MAX)) == NULL) {
         fprintf(stderr, "insufficient memory\n");
-	exit(EXIT_FAILURE);
+        goto error;
     }
-    r = readlink("/proc/self/exe",buf,PATH_MAX);
-    if (r < 0) {
+    if ((r = readlink("/proc/self/exe",buf,PATH_MAX)) < 0 ) {
         perror("get_exec_path");
-        exit(EXIT_FAILURE);
+        goto error;
     }
     buf[r] = '\0';
-    full_path = realpath(buf, NULL);
-    free(buf);
 #endif
+    /* Get the real absolute path. */
+    if ((full_path = realpath(buf, NULL)) == NULL) {
+        perror("get_exec_path");
+        goto error;
+    }
+    free(buf);
     return full_path;
+
+error:
+    free(buf);
+    free(full_path);
+    return NULL;
 }
