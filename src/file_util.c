@@ -1,6 +1,7 @@
 #include "file_util.h"
 
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>     /* malloc, free, realpath */
 
 #ifdef __APPLE__
@@ -15,10 +16,31 @@
 #include <limits.h> /* realpath */
 #endif
 
+#include <libgen.h>
+
 #ifdef _WIN32
 #endif
 
-char * get_exec_path()
+char *get_app_dir()
+{
+    char *path = NULL;
+    char *dir = NULL;
+    if ((path = get_exec_path()) == NULL) {
+        return NULL;
+    }
+    char * buf = dirname(path);
+    free(path);
+    if ((dir = (char*)malloc(strlen(buf) + 1)) == NULL) {
+        return NULL;
+    }
+    strcpy(dir,buf);
+    return dir;
+}
+
+/*
+ * http://stackoverflow.com/questions/1023306/finding-current-executables-path-without-proc-self-exe
+ */
+char *get_exec_path()
 {
     char * full_path = NULL;
     char *buf = NULL;

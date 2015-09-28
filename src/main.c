@@ -121,13 +121,16 @@ int main(int argc, char **argv)
 {
     int status;
     char *str = NULL;
+    char *dir = NULL;
 
     glfwSetErrorCallback(error_callback);
     // glfwInit();
 
     str = get_exec_path();
-    printf("%s\n",str);
+    dir = get_app_dir();
+    printf("%s\n%s\n",str,dir);
     free(str);
+    free(dir);
 
     lua_State *L;
     L = luaL_newstate();

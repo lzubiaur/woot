@@ -27,8 +27,9 @@
 extern "C" {
 #endif
 
+char *get_app_dir();
 /* Return the executable absolute path */
-char * get_exec_path();
+char *get_exec_path();
 
 #ifdef __cplusplus
 }
