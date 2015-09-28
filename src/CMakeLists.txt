@@ -19,20 +19,21 @@ target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES} liblua)
 
 if(BUILD_OSX)
     set(PKG_NAME ${PROJECT_NAME}.app)
-    set(PKG_RESOURCE_PREFIX ${BUNDLE_NAME}/Contents/MacOS)
+    set(PKG_RESOURCE_PREFIX ${PKG_NAME}/Contents/MacOS)
+    set(PKG_RUNTIME_DESTINATION ".")
     # MACOSX_BUNDLE can not be used with CPack
     set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE true)
     # Must defined pagezero_size and image_base or LuaJIT will crash on MacOSX 64bits. See luajit.org/install.html for flags
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-pagezero_size 10000 -image_base 100000000")
 elseif(BUILD_LINUX)
-   set(PKG_NAME ${PROJECT_NAME})
-   set(PKG_RUNTIME_DESTINATION ${PKG_NAME})
-   set(PKG_RESOURCE_PREFIX ${PKG_NAME})
-   # Since LuaJIT is link the static library we need to add the external dependencies  (-lm -ldl)
-   # http://luajit.org/install.html
-   target_link_libraries(${PROJECT_NAME} dl m)
-   # export all symbols
-   # set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-E")
+    set(PKG_NAME ${PROJECT_NAME})
+    set(PKG_RUNTIME_DESTINATION ${PKG_NAME})
+    set(PKG_RESOURCE_PREFIX ${PKG_NAME})
+    # Since LuaJIT is link the static library we need to add the external dependencies  (-lm -ldl)
+    # http://luajit.org/install.html
+    target_link_libraries(${PROJECT_NAME} dl m)
+    # export all symbols
+    # set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-E")
 endif(BUILD_OSX)
 
 # paths to executables
