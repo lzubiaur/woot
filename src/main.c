@@ -4,13 +4,16 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
 #include "luajit.h"
 
-#include <GLFW/glfw3.h>
+#include "GLFW/glfw3.h"
+
+#include "file_util.h"
 
 #define LUA_INIT_SCRIPT "main.lua"
 
@@ -92,11 +95,20 @@ static int dofile(lua_State *L, const char *name)
   return report(L, status);
 }
 
+/*
+static int dostring(lua_State *L, const char *s, const char *name)
+{
+  int status = luaL_loadbuffer(L, s, strlen(s), name) || docall(L, 0, 1);
+  return report(L, status);
+}
+*/
+
 static int pmain(lua_State *L)
 {
     /* Load Lua libraries */
     luaL_openlibs(L);
     logversion();
+
     return dofile(L,LUA_INIT_SCRIPT);
 }
 
@@ -108,9 +120,14 @@ static void error_callback(int error, const char* description)
 int main(int argc, char **argv)
 {
     int status;
-    // glfwSetErrorCallback(error_callback);
+    char *str = NULL;
 
+    glfwSetErrorCallback(error_callback);
     // glfwInit();
+
+    str = get_exec_path();
+    printf("%s\n",str);
+    free(str);
 
     lua_State *L;
     L = luaL_newstate();

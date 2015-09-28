@@ -12,41 +12,75 @@ configure_file("config.h.in" "${PROJECT_BINARY_DIR}/config.h")
 
 include_directories(${GLFW_HEADERS})
 
-add_executable(${PROJECT_NAME} main.c)
+add_executable(${PROJECT_NAME} main.c file_util.c)
 add_dependencies(${PROJECT_NAME} libluajit)
 
-# set_target_properties(${PROJECT_NAME} PROPERTIES ENABLE_EXPORTS true)
-# set(CMAKE_EXE_LINKER_FLAGS "-Wl -E")
-# set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl -E")
-# set(CMAKE_STATIC_LINKER_FLAGS "-Wl -E")
 target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES} liblua)
 
 if(BUILD_OSX)
+    # MACOSX_BUNDLE can not be used with CPack
+    set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE true)
     # Must defined pagezero_size and image_base or LuaJIT will crash on MacOSX 64bits. See luajit.org/install.html for flags
-    # TODO add bundle support
-    # set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE true)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-pagezero_size 10000 -image_base 100000000")
 elseif(BUILD_LINUX)
-   message("BUILD_LINUX DEBUG")
    # Since LuaJIT is link the static library we need to add the external dependencies  (-lm -ldl)
    # http://luajit.org/install.html
    target_link_libraries(${PROJECT_NAME} dl m)
    # export all symbols
-   set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-E")
+   # set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-E")
 endif(BUILD_OSX)
 
-
-# TODO rebase the bundle
-# set(APPS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app)
-# set(DIRS /Users/lzubiaur/Dev/woot/lib/luajit-2.0/src/)
+# rebase the bundle
+# paths to executables
+set(APPS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app)
+# directories to search for prerequisites. Libraries are copied automatically
+set(DIRS ${CMAKE_CURRENT_BINARY_DIR}/lib)
+# Plugins are loadable bundles that extend the basic features of your application
+set(PLUGINS "")
 
 install(TARGETS ${PROJECT_NAME}
-    # BUNDLE  DESTINATION ${PROJECT_NAME}
-    RUNTIME DESTINATION ${PROJECT_NAME}
-    # LIBRARY DESTINATION "tests/lib"
+    BUNDLE  DESTINATION "." COMPONENT Runtime
+    RUNTIME DESTINATION "." COMPONENT Runtime
+    # LIBRARY DESTINATION "libs"
     # ARCHIVE DESTINATION "tests/lib/static"
     )
 
-install(FILES main.lua DESTINATION ${PROJECT_NAME})
-install(DIRECTORY lua DESTINATION ${PROJECT_NAME})
+install(FILES main.lua DESTINATION ${PROJECT_NAME}.app/Contents/MacOS COMPONENT Runtime)
+install(DIRECTORY lua DESTINATION ${PROJECT_NAME}.app/Contents/MacOS COMPONENT Runtime)
+
+INSTALL(CODE "
+    include(BundleUtilities)
+    set(BU_CHMOD_BUNDLE_ITEMS ON)
+    fixup_bundle(\"${APPS}\" \"${PLUGINS}\" \"${DIRS}\")
+    " COMPONENT Runtime)
+
+# Supported MacOSX package:
+# CPACK_BINARY_BUNDLE       Enable to build OSX bundles
+# CPACK_BINARY_DRAGNDROP    Enable to build OSX Drag And Drop package
+# CPACK_BINARY_OSXX11       Enable to build OSX X11 packages
+# CPACK_BINARY_PACKAGEMAKER Enable to build PackageMaker packages
+
+set(CPACK_GENERATOR Bundle) # set CPACK_BINARY_BUNDLE to ON
+set(CPACK_BUNDLE_COMPONENT_INSTALL ON)
+
+configure_file("res/MacOSXBundleInfo.plist.in" "${PROJECT_BINARY_DIR}/Info.plist")
+
+include(InstallRequiredSystemLibraries)
+set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
+# SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "My funky project")
+# SET(CPACK_PACKAGE_VENDOR "Me, myself, and I")
+# SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/ReadMe.txt")
+# SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/Copyright.txt")
+# set(CPACK_PACKAGE_ERSION_MAJOR "1")
+# set(CPACK_PACKAGE_VERSION_MINOR "3")
+# set(CPACK_PACKAGE_VERSION_PATCH "2")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "CMake ${WOOT_VERSION_MAJOR}.${WOOT_VERSION_MINOR}")
+# CPACK_BUNDLE_STARTUP_COMMAND Can be an executable or a script for non trivial startup
+set(CPACK_BUNDLE_STARTUP_COMMAND "${PROJECT_BINARY_DIR}/src/${PROJECT_NAME}") 
+set(CPACK_BUNDLE_PLIST "${PROJECT_BINARY_DIR}/Info.plist")
+set(CPACK_BUNDLE_ICON "${PROJECT_SOURCE_DIR}/src/res/app.icns")
+# SET(CPACK_PACKAGE_EXECUTABLES "MyExecutable" "My Executable")
+
+# create the package target
+include(CPack)
 
