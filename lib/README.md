@@ -1,5 +1,9 @@
-#GLFW
-Optional builds have been disabled (e.g. examples,tests).
+# GLFW
+Optional builds have been disabled (e.g. examples,tests). See glfw/CMakeLists.txt
+
+# Linux 
+
+To view the executable shared library dependencies use the ldd command.
 
 # OSX RPath Support
 
