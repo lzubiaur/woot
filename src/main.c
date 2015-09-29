@@ -15,7 +15,7 @@
 
 #include "file_util.h"
 
-#define LUA_INIT_SCRIPT "main.lua"
+#define LUA_INIT_SCRIPT "lua/main.lua"
 
 static void logversion()
 {
@@ -120,16 +120,28 @@ static void error_callback(int error, const char* description)
 int main(int argc, char **argv)
 {
     int status;
-    char *str = NULL;
     char *dir = NULL;
+#ifdef __APPLE__
+    const char *res_dir = "../Resources";
+#elif defined (__LINUX__)
+    const char *res_dir = "../res";
+#endif
 
     glfwSetErrorCallback(error_callback);
     // glfwInit();
 
-    str = get_exec_path();
-    dir = get_app_dir();
-    printf("%s\n%s\n",str,dir);
-    free(str);
+    if ((dir = get_app_dir()) == NULL) {
+        return EXIT_FAILURE;
+    }
+    printf("[DEBUG] App directory is %s\n",dir);
+    if (chdir(dir) != 0) {
+        perror("Can't change to application directory");
+        return EXIT_FAILURE;
+    }
+    if (chdir(res_dir) != 0) {
+        perror("Can't change to resources directory");
+        return EXIT_FAILURE;
+    }
     free(dir);
 
     lua_State *L;

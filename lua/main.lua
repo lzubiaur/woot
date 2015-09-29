@@ -1,6 +1,6 @@
-package.path = './?.lua'
+package.path = './lua/?.lua'
 
-local glfw = require 'lua.glfw'()
+local glfw = require 'engine.glfw'()
 
 -- Initialize the library
 if glfw.Init() == 0 then

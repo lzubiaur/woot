@@ -24,23 +24,20 @@
 char *get_app_dir()
 {
     char *path = NULL, *dir = NULL, *buf = NULL;
-    if ((path = get_exec_path()) == NULL) goto error;
+    if ((path = get_exec_path()) == NULL) goto end;
     if ((buf = dirname(path)) == NULL) {
         perror("get_app_dir");
-        goto error;
+        goto end;
     }
-    free(path);
     if ((dir = (char*)malloc(strlen(buf) + 1)) == NULL) {
         fprintf(stderr, "insufficient memory\n");
-        goto error;
+        goto end;
     }
     strcpy(dir,buf);
-    return dir;
 
-error:
+end:
     free(path);
-    free(dir);
-    return NULL;
+    return dir;
 }
 
 /*
@@ -55,35 +52,35 @@ char *get_exec_path()
     _NSGetExecutablePath(NULL, &size);
     if ((buf = (char *)malloc(size)) == NULL) {
         fprintf(stderr, "insufficient memory\n");
-        goto error;
+        goto end;
     }
     /* Second call to actually get the exec path */
     if (_NSGetExecutablePath(buf, &size) != 0) {
         fprintf(stderr, "Can't get executable path\n");
-        goto error;
+        goto end;
     }
 #elif defined(__linux__)
     size_t r;
     if ((buf = (char *)malloc(PATH_MAX)) == NULL) {
         fprintf(stderr, "insufficient memory\n");
-        goto error;
+        goto end;
     }
     if ((r = readlink("/proc/self/exe",buf,PATH_MAX)) < 0 ) {
         perror("get_exec_path");
-        goto error;
+        goto end;
     }
     buf[r] = '\0';
 #endif
     /* Get the real absolute path. */
     if ((full_path = realpath(buf, NULL)) == NULL) {
         perror("get_exec_path");
-        goto error;
+        goto end;
     }
+
+    /* TODO Windows */
+    /* Windows: GetModuleFileName() with hModule = NULL */
+
+end:
     free(buf);
     return full_path;
-
-error:
-    free(buf);
-    free(full_path);
-    return NULL;
 }
