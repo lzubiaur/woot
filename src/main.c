@@ -123,8 +123,8 @@ int main(int argc, char **argv)
     char *dir = NULL;
 #ifdef __APPLE__
     const char *res_dir = "../Resources";
-#elif defined (__LINUX__)
-    const char *res_dir = "../res";
+#elif defined (__linux__)
+    const char *res_dir = "..";
 #endif
 
     glfwSetErrorCallback(error_callback);
