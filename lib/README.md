@@ -4,6 +4,7 @@ Optional builds have been disabled (e.g. examples,tests). See glfw/CMakeLists.tx
 # Linux 
 
 To view the executable shared library dependencies use the ldd command.
+Use patchelf to list and modify the binary RPATH.
 
 # OSX RPath Support
 
