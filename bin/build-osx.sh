@@ -1,22 +1,16 @@
-if ! [ -d "build" ]
+if ! [ -d "build/osx" ]
 then
-    mkdir build
+   mkdir -p "build/osx"
 fi
-cd build
+cd build/osx
 
-if ! [ -d "build-osx" ]
-then
-    mkdir build-osx
-fi
-cd build-osx
-
-#    -DCMAKE_INSTALL_PREFIX=$libprefix \
-
-# cmake -G "Xcode" \
-cmake \
+# Generate build system using the XCode generator.
+# Should also work using the "Unix Makefiles" generator.
+cmake -G "Xcode" \
     -DBUILD_OSX=TRUE \
     -DCMAKE_BUILD_TYPE=Release \
     ../..
 
+# Build and install the project using the Release config
 cmake --build . --target install --config Release
 
