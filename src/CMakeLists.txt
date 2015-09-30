@@ -28,6 +28,7 @@ if(BUILD_OSX)
     # Must defined pagezero_size and image_base or LuaJIT will crash on MacOSX 64bits. See luajit.org/install.html for flags
     set_target_properties(${RUNTIME_TARGET} PROPERTIES LINK_FLAGS "-pagezero_size 10000 -image_base 100000000")
 elseif(BUILD_LINUX)
+    # Runtime destination into the bundle
     set(BUNDLE_RUNTIME_DESTINATION ${BUNDLE_NAME}/bin)
     # Since LuaJIT is link the static library we need to add the external dependencies  (-lm -ldl)
     # http://luajit.org/install.html
@@ -38,7 +39,7 @@ endif(BUILD_OSX)
 
 install(TARGETS ${RUNTIME_TARGET}
     BUNDLE  DESTINATION "." COMPONENT Runtime
-    RUNTIME DESTINATION ${BUNDLE_RUNTIME_DESTINATION} COMPONENT Runtime
+    RUNTIME DESTINATION ${BUNDLE_RUNTIME_DESTINATION} COMPONENT Runtime # Not used by MACOSX_BUNDLE
     )
 
 # paths to executables
@@ -47,12 +48,19 @@ set(APPS ${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME})
 set(DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE})
 # Plugins are loadable bundles that extend the basic features of your application
 # On MacOSX it can be frameworks or shared lib not linked with the executable.
-set(PLUGINS "")
+# Plugins must be copied manually before they can be fixed by fixup_bundle.
+set(PLUGINS_DIRS "")
 
-# rebase the bundle
+
+# message(STATUS "DEBUG" ${CMAKE_MACOSX_PACKAGE_LOCATION})
+# set(PLUGINS libglfw.3.1.dylib)
+# file(COPY ${PLUGINS} DESTINATION )
+
+# rebase the bundle (Update the runtime and libraries RPATH) to make a standalone
+# bundle.
 install(CODE "
     include(BundleUtilities)
-    fixup_bundle(\"${APPS}\" \"${PLUGINS}\" \"${DIRS}\")
+    fixup_bundle(\"${APPS}\" \"${PLUGINS_DIRS}\" \"${DIRS}\")
     " COMPONENT Runtime)
 
 # Supported MacOSX package:
