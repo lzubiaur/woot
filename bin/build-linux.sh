@@ -1,15 +1,9 @@
 #!/bin/sh
-if ! [ -d "build" ]
+if ! [ -d "build/linux" ]
 then
-    mkdir build
+    mkdir -p "build/linux"
 fi
-cd build
-
-if ! [ -d "build-linux" ]
-then
-    mkdir build-linux
-fi
-cd build-linux
+cd build/linux
 
 export CXX="gcc"
 
