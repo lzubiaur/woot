@@ -20,8 +20,29 @@ set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/products/${CMAKE_BUILD_TYPE})
 if(BUILD_OSX)
     set(BUNDLE_NAME "${BUNDLE_NAME}.app")
     set(BUNDLE_RESOURCE_PREFIX "${BUNDLE_NAME}/Contents/Resources")
+
+   # Disable RPATH for build and install. We use fixup_bundle to assemble a 
+   # standle alone bundle.
+   # CMAKE_SKIP_RPATH is required disabled on OSX because dependencies like 
+   # GLFW are linked using the install path and fixup_bundle can't find them if they
+   # are not yet installed (which we don't want to do).
+   set(CMAKE_SKIP_RPATH TRUE)
 elseif(BUILD_LINUX)
-    set(BUNDLE_RESOURCE_PREFIX "${BUNDLE_NAME}")
+   set(BUNDLE_RESOURCE_PREFIX "${BUNDLE_NAME}")
+
+   # use, i.e. don't skip the full RPATH for the build tree
+   SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+
+   # when building, don't use the install RPATH already
+   # (but later on when installing)
+   SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
+
+   # the RPATH to be used when installing
+   SET(CMAKE_INSTALL_RPATH ".")
+
+   # don't add the automatically determined parts of the RPATH
+   # which point to directories outside the build tree to the install RPATH
+   SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 endif(BUILD_OSX)
 
 # Output directories for runtime, library and archive (static library).
@@ -33,13 +54,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
-
-# Disable RPATH for build and install. We use fixup_bundle to assemble a 
-# standle alone bundle.
-# CMAKE_SKIP_RPATH is required disabled on OSX because dependencies like 
-# GLFW are linked using the install path and fixup_bundle can't find them if they
-# are not yet installed (which we don't want to do).
-set(CMAKE_SKIP_RPATH TRUE)
 
 # add_definitions(-Wall -std=c++0x)
 add_definitions(-Wall)
