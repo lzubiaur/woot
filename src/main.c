@@ -12,7 +12,7 @@
 #include "luajit.h"
 
 #include "GLFW/glfw3.h"
-
+#include "config.h"
 #include "file_util.h"
 
 #define LUA_INIT_SCRIPT "lua/main.lua"
@@ -21,6 +21,7 @@ static void logversion()
 {
     fputs(LUA_RELEASE " -- " LUA_COPYRIGHT ". \n", stdout);
     fputs(LUAJIT_VERSION " -- " LUAJIT_COPYRIGHT ". " LUAJIT_URL "\n", stdout);
+    fputs(ENGINE_RELEASE " -- " ENGINE_COPYRIGHT ". \n",stdout);
 }
 static void l_message(const char *pname, const char *msg)
 {
@@ -133,7 +134,7 @@ int main(int argc, char **argv)
     if ((dir = get_app_dir()) == NULL) {
         return EXIT_FAILURE;
     }
-    printf("[DEBUG] App directory is %s\n",dir);
+    printf("[DEBUG] Application base directory is %s\n",dir);
     if (chdir(dir) != 0) {
         perror("Can't change to application directory");
         return EXIT_FAILURE;

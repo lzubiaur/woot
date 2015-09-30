@@ -1,14 +1,26 @@
-cmake_minimum_required(VERSION 3.0)
-project(woot C CXX)
+################################################################################
+# You can configure your Application build here
+set(PROJECT_NAME "woot")
 
+option(ENGINE_BUILD_TESTS "Build the Engine tests programs" ON)
+# Set the Application bundle name (.app will be added on OSX).
+set(BUNDLE_NAME ${PROJECT_NAME})
+
+# 
 set(CMAKE_VERBOSE_MAKEFILE OFF)
+################################################################################
+
+cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
+
+# Set the project name and the supported languages.
+project(${PROJECT_NAME} C CXX)
+
 set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/products/${CMAKE_BUILD_TYPE}) 
 
 if(BUILD_OSX)
-    set(BUNDLE_NAME ${PROJECT_NAME}.app)
+    set(BUNDLE_NAME "${BUNDLE_NAME}.app")
     set(BUNDLE_RESOURCE_PREFIX "${BUNDLE_NAME}/Contents/Resources")
 elseif(BUILD_LINUX)
-    set(BUNDLE_NAME ${PROJECT_NAME})
     set(BUNDLE_RESOURCE_PREFIX "${BUNDLE_NAME}")
 endif(BUILD_OSX)
 
@@ -34,7 +46,9 @@ add_definitions(-Wall)
 
 # Include the dependencies, tests and source
 add_subdirectory(lib)
-add_subdirectory(tests)
+if(ENGINE_BUILD_TESTS)
+    add_subdirectory(tests)
+endif()
 add_subdirectory(src)
 
 install(DIRECTORY lua DESTINATION ${BUNDLE_RESOURCE_PREFIX} COMPONENT Runtime)
