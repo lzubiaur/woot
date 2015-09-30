@@ -1,53 +1,54 @@
 cmake_minimum_required(VERSION 3.0)
 
 # Internal version number for the Woot game engine
-set(WOOT_VERSION_MAJOR "0")
-set(WOOT_VERSION_MINOR "1")
-set(WOOT_VERSION_PATCH "1")
-set(WOOT_VERSION_EXTRA "b")
-set(WOOT_VERSION "${WOOT_VERSION_MAJOR}.${WOOT_VERSION_MINOR}")
-set(WOOT_VERSION_FULL "${WOOT_VERSION}.${WOOT_VERSION_PATCH}${WOOT_VERSION_EXTRA}")
+set(ENGINE_VERSION_MAJOR "0")
+set(ENGINE_VERSION_MINOR "1")
+set(ENGINE_VERSION_PATCH "1")
+set(ENGINE_VERSION_EXTRA "b")
+set(ENGINE_VERSION "${WOOT_VERSION_MAJOR}.${WOOT_VERSION_MINOR}")
+set(ENGINE_VERSION_FULL "${WOOT_VERSION}.${WOOT_VERSION_PATCH}${WOOT_VERSION_EXTRA}")
 
 configure_file("config.h.in" "${PROJECT_BINARY_DIR}/config.h")
 
 include_directories(${GLFW_HEADERS})
 
-add_executable(${PROJECT_NAME} main.c file_util.c)
-add_dependencies(${PROJECT_NAME} libluajit)
+set(RUNTIME_TARGET ${PROJECT_NAME})
 
-target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES} liblua)
+add_executable(${RUNTIME_TARGET} main.c file_util.c)
+add_dependencies(${RUNTIME_TARGET} libluajit)
+
+target_link_libraries(${RUNTIME_TARGET} glfw ${GLFW_LIBRARIES} liblua)
 
 if(BUILD_OSX)
-    set(PKG_RUNTIME_DESTINATION ".")
+    set(BUNDLE_RUNTIME_DESTINATION ".")
     # MACOSX_BUNDLE can not be used with CPack
-    set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE true)
+    set_target_properties(${RUNTIME_TARGET} PROPERTIES MACOSX_BUNDLE true)
     # Must defined pagezero_size and image_base or LuaJIT will crash on MacOSX 64bits. See luajit.org/install.html for flags
-    set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-pagezero_size 10000 -image_base 100000000")
+    set_target_properties(${RUNTIME_TARGET} PROPERTIES LINK_FLAGS "-pagezero_size 10000 -image_base 100000000")
 elseif(BUILD_LINUX)
-    set(PKG_RUNTIME_DESTINATION ${PKG_NAME}/bin)
+    set(BUNDLE_RUNTIME_DESTINATION ${BUNDLE_NAME}/bin)
     # Since LuaJIT is link the static library we need to add the external dependencies  (-lm -ldl)
     # http://luajit.org/install.html
-    target_link_libraries(${PROJECT_NAME} dl m)
+    target_link_libraries(${RUNTIME_TARGET} dl m)
     # export all symbols
     # set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-E")
 endif(BUILD_OSX)
 
-# paths to executables
-set(APPS ${CMAKE_CURRENT_BINARY_DIR}/${PKG_NAME})
-# directories to search for prerequisites. Libraries are copied automatically
-set(DIRS ${CMAKE_CURRENT_BINARY_DIR}/lib)
-# Plugins are loadable bundles that extend the basic features of your application
-set(PLUGINS "")
-
-install(TARGETS ${PROJECT_NAME}
-    BUNDLE  DESTINATION "." COMPONENT Runtime # Mac OS X only
-    RUNTIME DESTINATION ${PKG_RUNTIME_DESTINATION} COMPONENT Runtime
-    # LIBRARY DESTINATION "libs"
-    # ARCHIVE DESTINATION "libs/static"
+install(TARGETS ${RUNTIME_TARGET}
+    BUNDLE  DESTINATION "." COMPONENT Runtime
+    RUNTIME DESTINATION ${BUNDLE_RUNTIME_DESTINATION} COMPONENT Runtime
     )
 
+# paths to executables
+set(APPS ${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME})
+# directories to search for prerequisites. Libraries are copied automatically
+set(DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE})
+# Plugins are loadable bundles that extend the basic features of your application
+# On MacOSX it can be frameworks or shared lib not linked with the executable.
+set(PLUGINS "")
+
 # rebase the bundle
-INSTALL(CODE "
+install(CODE "
     include(BundleUtilities)
     fixup_bundle(\"${APPS}\" \"${PLUGINS}\" \"${DIRS}\")
     " COMPONENT Runtime)
