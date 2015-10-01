@@ -14,4 +14,4 @@ set(GLFW_HEADERS "${PROJECT_SOURCE_DIR}/glfw/include" PARENT_SCOPE)
 # Add third-party libraries
 add_subdirectory(glfw)
 add_subdirectory(luajit-2.0)
-
+add_subdirectory(luafilesystem)
