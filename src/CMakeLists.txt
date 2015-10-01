@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 # Internal version number for the Woot game engine
 set(ENGINE_NAME "Woot")
-set(ENGINE_COPYRIGHT "Copyright (C) 2015 Laurent Zubiaur.")
+set(ENGINE_COPYRIGHT "Copyright (C) 2015 Laurent Zubiaur")
 set(ENGINE_VERSION_MAJOR "0")
 set(ENGINE_VERSION_MINOR "1")
 set(ENGINE_VERSION_PATCH "1")
@@ -17,7 +17,7 @@ include_directories(${GLFW_HEADERS} ${PROJECT_BINARY_DIR})
 set(RUNTIME_TARGET ${PROJECT_NAME})
 
 add_executable(${RUNTIME_TARGET} main.c file_util.c)
-add_dependencies(${RUNTIME_TARGET} libluajit)
+add_dependencies(${RUNTIME_TARGET} libluajit liblfs)
 
 target_link_libraries(${RUNTIME_TARGET} glfw ${GLFW_LIBRARIES} liblua)
 
@@ -49,8 +49,8 @@ set(DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE})
 # Plugins are loadable bundles that extend the basic features of your application
 # On MacOSX it can be frameworks or shared lib not linked with the executable.
 # Plugins must be copied manually before they can be fixed by fixup_bundle.
+# set(PLUGINS_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}/libglfw.3.dylib)
 set(PLUGINS_DIRS "")
-
 
 # message(STATUS "DEBUG" ${CMAKE_MACOSX_PACKAGE_LOCATION})
 # set(PLUGINS libglfw.3.1.dylib)
@@ -86,7 +86,7 @@ if(BUILD_OSX)
    # set(CPACK_PACKAGE_VERSION_PATCH "2")
    set(CPACK_PACKAGE_INSTALL_DIRECTORY "CMake ${ENGINE_VERSION_MAJOR}.${ENGINE_VERSION_MINOR}")
    # CPACK_BUNDLE_STARTUP_COMMAND Can be an executable or a script for non trivial startup
-   set(CPACK_BUNDLE_STARTUP_COMMAND "${PROJECT_BINARY_DIR}/src/${PROJECT_NAME}") 
+   set(CPACK_BUNDLE_STARTUP_COMMAND "${PROJECT_BINARY_DIR}/src/${PROJECT_NAME}")
    set(CPACK_BUNDLE_PLIST "${PROJECT_BINARY_DIR}/Info.plist")
    set(CPACK_BUNDLE_ICON "${PROJECT_SOURCE_DIR}/src/res/app.icns")
    # SET(CPACK_PACKAGE_EXECUTABLES "MyExecutable" "My Executable")
