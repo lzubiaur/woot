@@ -10,7 +10,7 @@ set(BUNDLE_NAME ${PROJECT_NAME})
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 ################################################################################
 
-cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.3 FATAL_ERROR)
 
 # Set the project name and the supported languages.
 project(${PROJECT_NAME} C CXX)

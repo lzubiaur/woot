@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.3)
 
 # set(LFS_ROOT "${PROJECT_SOURCE_DIR}/luafilesystem")
 # set(LFS_WORKING_DIR "${CMAKE_BINARY_DIR}/luafilesystem")
