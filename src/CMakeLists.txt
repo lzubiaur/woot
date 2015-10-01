@@ -22,12 +22,14 @@ add_dependencies(${RUNTIME_TARGET} libluajit)
 target_link_libraries(${RUNTIME_TARGET} glfw ${GLFW_LIBRARIES} liblua)
 
 if(BUILD_OSX)
+    set(APPS ${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME})
     set(BUNDLE_RUNTIME_DESTINATION ".")
     # MACOSX_BUNDLE can not be used with CPack
     set_target_properties(${RUNTIME_TARGET} PROPERTIES MACOSX_BUNDLE true)
     # Must defined pagezero_size and image_base or LuaJIT will crash on MacOSX 64bits. See luajit.org/install.html for flags
     set_target_properties(${RUNTIME_TARGET} PROPERTIES LINK_FLAGS "-pagezero_size 10000 -image_base 100000000")
 elseif(BUILD_LINUX)
+    set(APPS ${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}/bin/${RUNTIME_TARGET})
     # Runtime destination into the bundle
     set(BUNDLE_RUNTIME_DESTINATION ${BUNDLE_NAME}/bin)
     # Since LuaJIT is link the static library we need to add the external dependencies  (-lm -ldl)
@@ -42,8 +44,6 @@ install(TARGETS ${RUNTIME_TARGET}
     RUNTIME DESTINATION ${BUNDLE_RUNTIME_DESTINATION} COMPONENT Runtime # Not used by MACOSX_BUNDLE
     )
 
-# paths to executables
-set(APPS ${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME})
 # directories to search for prerequisites. Libraries are copied automatically
 set(DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE})
 # Plugins are loadable bundles that extend the basic features of your application
