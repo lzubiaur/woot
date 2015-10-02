@@ -16,7 +16,7 @@ cmake_minimum_required(VERSION 3.0)
 add_library(liblfs SHARED src/lfs.c)
 # Add dependencies targets
 # add_dependencies(liblfs copy_lfs libluajit) # Copy files to the build dir before building the shared library
-add_dependencies(liblfs libluajit)
+add_dependencies(liblfs liblua)
 
 set_target_properties(liblfs PROPERTIES OUTPUT_NAME "lfs")
 
