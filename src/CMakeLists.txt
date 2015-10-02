@@ -50,18 +50,24 @@ set(DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE})
 # On MacOSX it can be frameworks or shared lib not linked with the executable.
 # Plugins must be copied manually before they can be fixed by fixup_bundle.
 # set(PLUGINS_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}/libglfw.3.dylib)
-set(PLUGINS_DIRS "")
+# set(PLUGINS_DIRS "")
 
-# message(STATUS "DEBUG" ${CMAKE_MACOSX_PACKAGE_LOCATION})
-# set(PLUGINS libglfw.3.1.dylib)
-# file(COPY ${PLUGINS} DESTINATION )
+get_target_property(LFS_LIB_NAME liblfs OUTPUT_NAME)
+set(PLUGINS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}/${CMAKE_SHARED_LIBRARY_PREFIX}${LFS_LIB_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+set(PLUGINS_DESTINATION "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}/Contents/MacOS")
+# install(FILES ${PLUGINS} DESTINATION "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}/Contents/MacOS")
+
+set(fixup_bundle ${PROJECT_BINARY_DIR}/fixup_bundle.cmake)
+configure_file(fixup_bundle.cmake.in ${fixup_bundle} @ONLY)
+install(SCRIPT ${fixup_bundle} COMPONENT Runtime)
 
 # rebase the bundle (Update the runtime and libraries RPATH) to make a standalone
 # bundle.
-install(CODE "
-    include(BundleUtilities)
-    fixup_bundle(\"${APPS}\" \"${PLUGINS_DIRS}\" \"${DIRS}\")
-    " COMPONENT Runtime)
+# install(CODE "
+#     configure_file(${PLUGIN_LFS} ${PLUGIN_DESTINATION} COPYONLY)
+#     include(BundleUtilities)
+#     fixup_bundle(\"${APPS}\" \"${PLUGIN_DESTINATION}/liblfs.dylib\" \"${DIRS}\")
+#     " COMPONENT Runtime)
 
 # Supported MacOSX package:
 # CPACK_BINARY_BUNDLE       Enable to build OSX bundles

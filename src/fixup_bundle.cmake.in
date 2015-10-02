@@ -1,0 +1,13 @@
+set(APPS @APPS@)
+set(DIRS @DIRS@)
+set(PLUGINS @PLUGINS@)
+set(PLUGINS_DESTINATION @PLUGINS_DESTINATION@)
+
+get_filename_component(MODULE_NAME ${PLUGINS} NAME)
+message(STATUS ${MODULE_NAME})
+
+configure_file(${PLUGINS} ${PLUGINS_DESTINATION} COPYONLY)
+
+include(BundleUtilities)
+# set(BU_CHMOD_BUNDLE_ITEMS ON)
+fixup_bundle("${APPS}" "${PLUGINS_DESTINATION}/${MODULE_NAME}" "${DIRS}")
