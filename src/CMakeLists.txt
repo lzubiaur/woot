@@ -22,14 +22,16 @@ add_dependencies(${RUNTIME_TARGET} liblua liblfs)
 target_link_libraries(${RUNTIME_TARGET} glfw ${GLFW_LIBRARIES} liblua)
 
 if(BUILD_OSX)
-    set(APPS ${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME})
+    set(APP "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}")
+    set(PLUGINS_DESTINATION "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}/Contents/MacOS")
     set(BUNDLE_RUNTIME_DESTINATION ".")
     # MACOSX_BUNDLE can not be used with CPack
     set_target_properties(${RUNTIME_TARGET} PROPERTIES MACOSX_BUNDLE true)
     # Must defined pagezero_size and image_base or LuaJIT will crash on MacOSX 64bits. See luajit.org/install.html for flags
     set_target_properties(${RUNTIME_TARGET} PROPERTIES LINK_FLAGS "-pagezero_size 10000 -image_base 100000000")
 elseif(BUILD_LINUX)
-    set(APPS ${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}/bin/${RUNTIME_TARGET})
+    set(APP "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}/bin/${RUNTIME_TARGET}")
+    set(PLUGINS_DESTINATION "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}/bin")
     # Runtime destination into the bundle
     set(BUNDLE_RUNTIME_DESTINATION ${BUNDLE_NAME}/bin)
     # Since LuaJIT is link the static library we need to add the external dependencies  (-lm -ldl)
@@ -41,7 +43,7 @@ endif(BUILD_OSX)
 
 install(TARGETS ${RUNTIME_TARGET}
     BUNDLE  DESTINATION "." COMPONENT Runtime
-    RUNTIME DESTINATION ${BUNDLE_RUNTIME_DESTINATION} COMPONENT Runtime # Not used by MACOSX_BUNDLE
+    RUNTIME DESTINATION ${BUNDLE_RUNTIME_DESTINATION} COMPONENT Runtime
     )
 
 # directories to search for prerequisites. Libraries are copied automatically
@@ -49,14 +51,15 @@ set(DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE})
 # Plugins are loadable bundles that extend the basic features of your application
 # On MacOSX it can be frameworks or shared lib not linked with the executable.
 # Plugins must be copied manually before they can be fixed by fixup_bundle.
-# set(PLUGINS_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}/libglfw.3.dylib)
-# set(PLUGINS_DIRS "")
-
 get_target_property(LFS_LIB_NAME liblfs OUTPUT_NAME)
 set(PLUGINS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}/${CMAKE_SHARED_LIBRARY_PREFIX}${LFS_LIB_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
-set(PLUGINS_DESTINATION "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}/Contents/MacOS")
-# install(FILES ${PLUGINS} DESTINATION "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}/Contents/MacOS")
 
+# test
+# list(APPEND PLUGINS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}/libffi.dylib")
+
+# Rebase the bundle using configurable cmake script (fixup_bundle.cmake.in)
+# Could be done using "install CODE" but it's more flexible using script. Plus get_filename_component
+# doesn't seem to work in embedded script ("install CODE").
 set(fixup_bundle ${PROJECT_BINARY_DIR}/fixup_bundle.cmake)
 configure_file(fixup_bundle.cmake.in ${fixup_bundle} @ONLY)
 install(SCRIPT ${fixup_bundle} COMPONENT Runtime)

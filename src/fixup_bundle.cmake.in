@@ -1,13 +1,17 @@
-set(APPS @APPS@)
+set(APP @APP@)
 set(DIRS @DIRS@)
 set(PLUGINS @PLUGINS@)
 set(PLUGINS_DESTINATION @PLUGINS_DESTINATION@)
 
-get_filename_component(MODULE_NAME ${PLUGINS} NAME)
-message(STATUS ${MODULE_NAME})
+set(PLUGINS_LIST "")
 
-configure_file(${PLUGINS} ${PLUGINS_DESTINATION} COPYONLY)
+foreach(ITEM IN LISTS PLUGINS)
+    get_filename_component(PLUGIN_NAME ${ITEM} NAME)
+    message(STATUS "Copy plugin: ${PLUGIN_NAME}")
+    configure_file(${ITEM} "${PLUGINS_DESTINATION}/${PLUGIN_NAME}" COPYONLY)
+    list(APPEND PLUGINS_LIST "${PLUGINS_DESTINATION}/${PLUGIN_NAME}")
+endforeach()
 
 include(BundleUtilities)
 # set(BU_CHMOD_BUNDLE_ITEMS ON)
-fixup_bundle("${APPS}" "${PLUGINS_DESTINATION}/${MODULE_NAME}" "${DIRS}")
+fixup_bundle("${APP}" "${PLUGINS_LIST}" "${DIRS}")
