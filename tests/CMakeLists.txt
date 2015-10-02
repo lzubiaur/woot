@@ -5,7 +5,7 @@ include_directories(${GLFW_HEADERS})
 
 # LuaJIT
 add_executable(test_luajit luajit.c)
-add_dependencies(test_luajit libluajit)
+add_dependencies(test_luajit liblua)
 target_link_libraries(test_luajit liblua)
 
 # GLFW
@@ -14,7 +14,7 @@ target_link_libraries(test_glfw glfw ${GLFW_LIBRARIES})
 
 # FFI
 add_executable(test_ffi ffi.c)
-add_dependencies(test_ffi libluajit)
+add_dependencies(test_ffi liblua)
 target_link_libraries(test_ffi glfw ${GLFW_LIBRARIES} liblua)
 
 if(BUILD_OSX)
