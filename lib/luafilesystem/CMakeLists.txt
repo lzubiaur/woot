@@ -18,6 +18,8 @@ add_library(liblfs SHARED src/lfs.c)
 # add_dependencies(liblfs copy_lfs libluajit) # Copy files to the build dir before building the shared library
 add_dependencies(liblfs libluajit)
 
+set_target_properties(liblfs PROPERTIES OUTPUT_NAME "lfs")
+
 # Specify libraries or flags to use when linking with target libfls
 target_link_libraries(liblfs liblua)
 target_include_directories(liblfs PUBLIC ${LFS_INCLUDE})
