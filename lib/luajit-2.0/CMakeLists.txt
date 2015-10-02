@@ -23,12 +23,13 @@ add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/luajit/src/libluajit.a
     COMMAND $(MAKE) VERBOSE=1 libluajit.a
     )
 
-add_custom_target(libluajit
+add_custom_target(lua_custom_build
     DEPENDS ${PROJECT_BINARY_DIR}/luajit
     DEPENDS ${PROJECT_BINARY_DIR}/luajit/src/libluajit.a
     )
 
 add_library(liblua INTERFACE)
+add_dependencies(liblua lua_custom_build)
 # Specify libraries or flags to use when linking with target libluajit
 target_link_libraries(liblua INTERFACE "${PROJECT_BINARY_DIR}/luajit/src/${LUA_LIB}")
 #add_dependencies(liblua-static liblua)

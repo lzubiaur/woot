@@ -17,7 +17,7 @@ include_directories(${GLFW_HEADERS} ${PROJECT_BINARY_DIR})
 set(RUNTIME_TARGET ${PROJECT_NAME})
 
 add_executable(${RUNTIME_TARGET} main.c file_util.c)
-add_dependencies(${RUNTIME_TARGET} libluajit liblfs)
+add_dependencies(${RUNTIME_TARGET} liblua liblfs)
 
 target_link_libraries(${RUNTIME_TARGET} glfw ${GLFW_LIBRARIES} liblua)
 
