@@ -24,7 +24,7 @@ ABIVER=  5.1
 # Change the installation path as needed. This automatically adjusts
 # the paths in src/luaconf.h, too. Note: PREFIX must be an absolute path!
 #
-export PREFIX= /Users/lzubiaur/Dev/woot/products/libs
+export PREFIX= /usr/local
 export MULTILIB= lib
 ##############################################################################
 
