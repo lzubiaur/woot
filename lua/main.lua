@@ -2,6 +2,14 @@ package.path = './lua/?.lua'
 
 local glfw = require 'engine.glfw'()
 
+-- Load and open the LuaFileSystem
+-- TODO test on Linux
+local path = "../MacOS/liblfs.dylib"
+local f = assert(package.loadlib(path, "luaopen_lfs"))
+f()  -- actually open the library
+
+print(lfs.currentdir())
+
 -- Initialize the library
 if glfw.Init() == 0 then
   return
