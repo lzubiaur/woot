@@ -31,7 +31,12 @@ add_custom_target(lua_custom_build
 add_library(liblua INTERFACE)
 add_dependencies(liblua lua_custom_build)
 # Specify libraries or flags to use when linking with target libluajit
-target_link_libraries(liblua INTERFACE "${PROJECT_BINARY_DIR}/luajit/src/${LUA_LIB}")
-#add_dependencies(liblua-static liblua)
-
+if(BUILD_OSX)
+    target_link_libraries(liblua INTERFACE "${PROJECT_BINARY_DIR}/luajit/src/${LUA_LIB}")
+else(BUILD_LINUX)
+    # Since LuaJIT is link the static library we need to add the external dependencies  (-lm -ldl)
+    # http://luajit.org/install.html
+    target_link_libraries(liblua INTERFACE "${PROJECT_BINARY_DIR}/luajit/src/${LUA_LIB}" dl m)
+endif(BUILD_OSX)
+# Specify the headers so they will be implicitly included when other targert link against this library
 target_include_directories(liblua INTERFACE ${LUAJIT_INCLUDE})

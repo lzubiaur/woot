@@ -22,10 +22,6 @@ if(BUILD_OSX)
     # Must defined pagezero_size and image_base or LuaJIT will crash on MacOSX 64bits. See luajit.org/install.html for flags
     set_target_properties(test_luajit test_ffi PROPERTIES LINK_FLAGS "-pagezero_size 10000 -image_base 100000000")
 elseif(BUILD_LINUX)
-   message("BUILD_LINUX DEBUG")
-   # Since LuaJIT is link the static library we need to add the external dependencies  (-lm -ldl)
-   # http://luajit.org/install.html
-   target_link_libraries(test_luajit dl m)
 endif(BUILD_OSX)
 
 set(APPS ${CMAKE_CURRENT_BINARY_DIR}/test_luajit.app)

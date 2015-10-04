@@ -34,11 +34,6 @@ elseif(BUILD_LINUX)
     set(PLUGINS_DESTINATION "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}/bin")
     # Runtime destination into the bundle
     set(BUNDLE_RUNTIME_DESTINATION ${BUNDLE_NAME}/bin)
-    # Since LuaJIT is link the static library we need to add the external dependencies  (-lm -ldl)
-    # http://luajit.org/install.html
-    target_link_libraries(${RUNTIME_TARGET} dl m)
-    # export all symbols
-    # set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-E")
 endif(BUILD_OSX)
 
 install(TARGETS ${RUNTIME_TARGET}
