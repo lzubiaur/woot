@@ -1,7 +1,7 @@
 # Compile on Linux (Debian/Ubuntu)
-Tested on "Linux debian 3.16 i686"
+Tested on debian 8 (jessie) and Ubuntu 15.04 (both 64bit version).
 
-Dependencies - Required packages
+# Dependencies - Required packages
 cmake
 gcc (should be installed with cmake)
 git-core
