@@ -19,7 +19,7 @@ set(RUNTIME_TARGET ${PROJECT_NAME})
 add_executable(${RUNTIME_TARGET} main.c file_util.c)
 add_dependencies(${RUNTIME_TARGET} liblua liblfs)
 
-target_link_libraries(${RUNTIME_TARGET} glfw ${GLFW_LIBRARIES} liblua)
+target_link_libraries(${RUNTIME_TARGET} liblua)
 
 if(BUILD_OSX)
     set(APP "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}")
@@ -49,8 +49,9 @@ set(DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE})
 get_target_property(LFS_LIB_NAME liblfs OUTPUT_NAME)
 set(PLUGINS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}/${CMAKE_SHARED_LIBRARY_PREFIX}${LFS_LIB_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
-# test
-# list(APPEND PLUGINS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}/libffi.dylib")
+# GLFW
+get_target_property(GLFW_LIB_NAME glfw OUTPUT_NAME)
+list(APPEND PLUGINS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}/${CMAKE_SHARED_LIBRARY_PREFIX}${GLFW_LIB_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 # Rebase the bundle using configurable cmake script (fixup_bundle.cmake.in)
 # Could be done using "install CODE" but it's more flexible using script. Plus get_filename_component
