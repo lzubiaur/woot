@@ -4,7 +4,7 @@
     | | /| / / __ \/ __ \/ __/
     | |/ |/ / /_/ / /_/ / /_  
     |__/|__/\____/\____/\__/  
-
+                           2D game engine
 ## Introduction
 
 WOOT is a cross-platform Lua 2D game engine.
