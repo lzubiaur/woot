@@ -1,14 +1,25 @@
+-- Lua module search path
 package.path = './lua/?.lua'
+-- C module (shared library) search path
+package.cpath = '../MacOS/lib?.dylib;../bin/lib?.so'
 
-local glfw = require 'engine.glfw'()
+-- =============================================================================
+-- Module loading
 
 -- Load and open the LuaFileSystem
--- TODO test on Linux
-local path = "../MacOS/liblfs.dylib"
-local f = assert(package.loadlib(path, "luaopen_lfs"))
-f()  -- actually open the library
+-- Note that C module can be loaded using `package.loadlib` instead of `require`
+-- but loadlib does not perform any path searching unlike require.
 
+-- Low level C module loading
+-- local path = "../MacOS/liblfs.dylib"
+-- local f = assert(package.loadlib('lfs', "luaopen_lfs"))
+-- f()  -- actually open the library
+
+-- Load Lua File System using `require`
+local lfs = require 'lfs'
 print(lfs.currentdir())
+
+local glfw = require 'engine.glfw'('glfw')
 
 -- Initialize the library
 if glfw.Init() == 0 then
