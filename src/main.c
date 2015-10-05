@@ -11,7 +11,6 @@
 #include "lualib.h"
 #include "luajit.h"
 
-#include "GLFW/glfw3.h"
 #include "config.h"
 #include "file_util.h"
 
@@ -113,11 +112,6 @@ static int pmain(lua_State *L)
     return dofile(L,LUA_INIT_SCRIPT);
 }
 
-static void error_callback(int error, const char* description)
-{
-    fprintf(stderr, "Error: %s\n", description);
-}
-
 int main(int argc, char **argv)
 {
     int status;
@@ -128,13 +122,10 @@ int main(int argc, char **argv)
     const char *res_dir = "..";
 #endif
 
-    glfwSetErrorCallback(error_callback);
-    // glfwInit();
-
     if ((dir = get_app_dir()) == NULL) {
         return EXIT_FAILURE;
     }
-    printf("[DEBUG] Application base directory is %s\n",dir);
+    printf("Change current directory to %s\n",dir);
     if (chdir(dir) != 0) {
         perror("Can't change to application directory");
         return EXIT_FAILURE;
