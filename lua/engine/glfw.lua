@@ -5,7 +5,7 @@
 
 local ffi = require 'ffi'
 local jit = require 'jit'
-
+local fileutil = require 'engine.fileutil'()
 
 local const = {}
 
@@ -972,9 +972,9 @@ local function init(self, name)
   ffi.cdef(header)
 
   -- Load GLFW as a dynamic library
-  -- bind = ffi.load(name)
-  -- Must use the default namespace because GLFW is linked to the executable as a static library
-  bind = ffi.C
+  bind = ffi.load(fileutil:getModulePath(name))
+  -- Must use the default namespace if GLFW is linked to the executable as a static library
+  -- bind = ffi.C
 
   ffi.metatype('GLFWmonitor', monitor_mt)
   ffi.metatype('GLFWwindow', window_mt)
