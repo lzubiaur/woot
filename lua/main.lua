@@ -1,7 +1,7 @@
 -- Lua module search path
 package.path = './lua/?.lua'
 -- C module (shared library) search path
-package.cpath = '../MacOS/lib?.dylib;../bin/lib?.so'
+package.cpath = '../MacOS/lib?.dylib;./bin/lib?.so'
 
 assert(jit.os == 'OSX' or jit.os == 'Linux' or jit.os == 'Windows', 'Target OS not supported: ' .. jit.os)
 require 'engine.fileutil'.init()

@@ -26,7 +26,7 @@ function fileutil.init()
         end
     elseif (jit.os == 'Linux') then
         fileutil.getModulePath = function(name)
-            return '../bin/lib' .. name .. '.so'
+            return './bin/lib' .. name .. '.so'
         end
     else
         -- TODO Windows
