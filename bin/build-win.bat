@@ -1,16 +1,16 @@
 @echo off
 
-if not exists build\win (
+if not exist build\win (
     mkdir build\win
     )
 
-cd build\win
+pushd build\win
 
-CMAKE="cmake"
-
-%CMAKE% ^
+cmake.exe ^
     -DBUILD_WIN=TRUE ^
     -DCMAKE_BUILD_TYPE=Release ^
     ..\..
 
-%CMAKE% --build . --target install --config Release
+cmake.exe --build . --target install --config Release
+
+popd
