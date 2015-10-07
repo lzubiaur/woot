@@ -23,14 +23,14 @@ add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/luajit
 )
 
 if(BUILD_WIN)
-    add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/luajit/src/lua52.lib
+    add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/luajit/src/lua51.lib
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/luajit/src
         COMMAND ${BUILD_CMD}
     )
 
     add_custom_target(lua_custom_build
         DEPENDS ${PROJECT_BINARY_DIR}/luajit
-        DEPENDS ${PROJECT_BINARY_DIR}/luajit/src/libluajit.a
+        DEPENDS ${PROJECT_BINARY_DIR}/luajit/src/lua51.lib
     )
 else()
     add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/luajit/src/libluajit.a
