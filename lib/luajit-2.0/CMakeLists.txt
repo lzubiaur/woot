@@ -5,7 +5,7 @@ set(LUAJIT_INCLUDE "${PROJECT_BINARY_DIR}/luajit/src")
 # set(LUA_HEADERS ${LUAJIT_INCLUDE} PARENT_SCOPE)
 
 if(BUILD_WIN)
-    set(LUA_LIB lua52.lib)
+    set(LUA_LIB lua51.lib)
     set(BUILD_CMD "msvcbuild.bat")
 else()
     set(LUA_LIB libluajit.a)
