@@ -43,6 +43,8 @@ elseif(BUILD_LINUX)
    # don't add the automatically determined parts of the RPATH
    # which point to directories outside the build tree to the install RPATH
    SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+elseif(BUILD_WIN)
+   set(BUNDLE_RESOURCE_PREFIX "${BUNDLE_NAME}")
 endif(BUILD_OSX)
 
 # Output directories for runtime, library and archive (static library).

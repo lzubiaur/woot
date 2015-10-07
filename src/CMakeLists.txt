@@ -34,6 +34,11 @@ elseif(BUILD_LINUX)
     set(PLUGINS_DESTINATION "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}/bin")
     # Runtime destination into the bundle
     set(BUNDLE_RUNTIME_DESTINATION ${BUNDLE_NAME}/bin)
+elseif(BUILD_WIN)
+    set(APP "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}/bin/${RUNTIME_TARGET}")
+    set(PLUGINS_DESTINATION "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}/bin")
+    # Runtime destination into the bundle
+    set(BUNDLE_RUNTIME_DESTINATION ${BUNDLE_NAME}/bin)
 endif(BUILD_OSX)
 
 install(TARGETS ${RUNTIME_TARGET}
