@@ -4,8 +4,13 @@ set(LUAJIT_DIST "${PROJECT_SOURCE_DIR}/luajit-2.0")
 set(LUAJIT_INCLUDE "${PROJECT_BINARY_DIR}/luajit/src")
 # set(LUA_HEADERS ${LUAJIT_INCLUDE} PARENT_SCOPE)
 
-# TODO don't hardcode library name
-set(LUA_LIB libluajit.a)
+if(BUILD_WIN)
+    set(LUA_LIB lua52.lib)
+    set(BUILD_CMD "msvcbuild.bat")
+else()
+    set(LUA_LIB libluajit.a)
+    set(BUILD_CMD ${MAKE})
+endif()
 
 # Copy to the build directory so we don't polute the source tree.
 # WARNING add_custom_command doesnt seems to work if the output file is a variable.
@@ -17,16 +22,28 @@ add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/luajit
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${LUAJIT_DIST} ${PROJECT_BINARY_DIR}/luajit
 )
 
-add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/luajit/src/libluajit.a
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/luajit/src
-    COMMAND $(MAKE) VERBOSE=1 clean
-    COMMAND $(MAKE) VERBOSE=1 libluajit.a
+if(BUILD_WIN)
+    add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/luajit/src/lua52.lib
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/luajit/src
+        COMMAND ${BUILD_CMD}
     )
 
-add_custom_target(lua_custom_build
-    DEPENDS ${PROJECT_BINARY_DIR}/luajit
-    DEPENDS ${PROJECT_BINARY_DIR}/luajit/src/libluajit.a
+    add_custom_target(lua_custom_build
+        DEPENDS ${PROJECT_BINARY_DIR}/luajit
+        DEPENDS ${PROJECT_BINARY_DIR}/luajit/src/libluajit.a
     )
+else()
+    add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/luajit/src/libluajit.a
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/luajit/src
+        COMMAND ${BUILD_CMD} VERBOSE=1 clean
+        COMMAND ${BUILD_CMD} VERBOSE=1 libluajit.a
+    )
+
+    add_custom_target(lua_custom_build
+        DEPENDS ${PROJECT_BINARY_DIR}/luajit
+        DEPENDS ${PROJECT_BINARY_DIR}/luajit/src/libluajit.a
+    )
+endif()
 
 add_library(liblua INTERFACE)
 add_dependencies(liblua lua_custom_build)
@@ -35,8 +52,8 @@ if(BUILD_LINUX)
     # Since LuaJIT is link the static library we need to add the external dependencies  (-lm -ldl)
     # http://luajit.org/install.html
     target_link_libraries(liblua INTERFACE "${PROJECT_BINARY_DIR}/luajit/src/${LUA_LIB}" dl m)
-else(BUILD_LINUX)
+else()
     target_link_libraries(liblua INTERFACE "${PROJECT_BINARY_DIR}/luajit/src/${LUA_LIB}")
-endif(BUILD_LINUX)
+endif()
 # Specify the headers so they will be implicitly included when other targert link against this library
 target_include_directories(liblua INTERFACE ${LUAJIT_INCLUDE})
