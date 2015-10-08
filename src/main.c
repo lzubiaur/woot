@@ -16,6 +16,10 @@
 
 #define LUA_INIT_SCRIPT "lua/main.lua"
 
+#ifdef _WIN32
+#define chdir(p) (_chdir(p))
+#endif
+
 static void logversion()
 {
     fputs(LUA_RELEASE " -- " LUA_COPYRIGHT ". \n", stdout);
