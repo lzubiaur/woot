@@ -6,10 +6,8 @@ set(LUAJIT_INCLUDE "${PROJECT_BINARY_DIR}/luajit/src")
 
 if(BUILD_WIN)
     set(LUA_LIB lua51.lib)
-    set(BUILD_CMD "msvcbuild.bat")
 else()
     set(LUA_LIB libluajit.a)
-    set(BUILD_CMD ${MAKE})
 endif()
 
 # Copy to the build directory so we don't polute the source tree.
@@ -25,7 +23,7 @@ add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/luajit
 if(BUILD_WIN)
     add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/luajit/src/lua51.lib
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/luajit/src
-        COMMAND ${BUILD_CMD}
+        COMMAND msvcbuild.bat
     )
 
     add_custom_target(lua_custom_build
@@ -35,8 +33,8 @@ if(BUILD_WIN)
 else()
     add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/luajit/src/libluajit.a
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/luajit/src
-        COMMAND ${BUILD_CMD} VERBOSE=1 clean
-        COMMAND ${BUILD_CMD} VERBOSE=1 libluajit.a
+        COMMAND make VERBOSE=1 clean
+        COMMAND make VERBOSE=1 libluajit.a
     )
 
     add_custom_target(lua_custom_build
