@@ -22,8 +22,8 @@ include_directories("${PROJECT_SOURCE_DIR}/luajit-2.0/src")
 set_target_properties(liblfs PROPERTIES OUTPUT_NAME "lfs")
 
 # Specify libraries or flags to use when linking with target libfls
-if(BUILD_OSX)
-    # Only required on OSX. Why?
+if(NOT BUILD_LINUX)
+    # TODO Doesn't work on Linux but required on Windows and OSX. Why?
     target_link_libraries(liblfs liblua)
-endif(BUILD_OSX)
+endif()
 target_include_directories(liblfs PUBLIC ${LFS_INCLUDE})
