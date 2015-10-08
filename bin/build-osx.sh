@@ -4,6 +4,8 @@ then
 fi
 cd build/osx
 
+msg=" --------------------- BUILD SUCCEEDED ---------------------"
+
 # Generate build system using the XCode generator.
 # Should also work using the "Unix Makefiles" generator.
 cmake -G "Xcode" \
@@ -12,5 +14,4 @@ cmake -G "Xcode" \
     ../..
 
 # Build and install the project using the Release config
-cmake --build . --target install --config Release
-
+cmake --build . --target install --config Release && echo $msg
