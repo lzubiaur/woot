@@ -4,7 +4,12 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+
+#ifdef _WIN32
+#include <direct.h> /* _chdir */
+#else
 #include <unistd.h>
+#endif
 
 #include "lua.h"
 #include "lauxlib.h"
@@ -122,7 +127,7 @@ int main(int argc, char **argv)
     char *dir = NULL;
 #ifdef __APPLE__
     const char *res_dir = "../Resources";
-#elif defined (__linux__)
+#else
     const char *res_dir = "..";
 #endif
 
