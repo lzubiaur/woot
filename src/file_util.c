@@ -89,7 +89,7 @@ char *get_exec_path()
     /* Call GetModuleFileName with hModule (first parameter) = NULL to get the path of
     the executable file of the current process */
     if ((len = GetModuleFileName(NULL,buf,MAX_PATH)) == 0) {
-        fprintf(stderr, "Can't get executable file path [%d]",GetLastError())
+        fprintf(stderr, "Can't get executable file path [%d]",GetLastError());
         goto end;
     }
     /*  Windows XP: If path is too long the string is truncated to MAX_PATH characters
