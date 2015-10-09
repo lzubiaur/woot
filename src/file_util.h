@@ -23,6 +23,10 @@
 #ifndef FILE_UTIL_H
 #define FILE_UTIL_H
 
+#ifdef _WIN32
+#define chdir(p) (_chdir(p))
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
