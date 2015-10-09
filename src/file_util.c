@@ -5,8 +5,7 @@
 #include <stdlib.h>     /* malloc, free, realpath */
 
 #ifdef __APPLE__
-/* For _NSGetExecutablePath */
-#include <mach-o/dyld.h>
+#include <mach-o/dyld.h> /* For _NSGetExecutablePath */
 #endif
 
 #ifdef __linux__
@@ -16,9 +15,10 @@
 #include <limits.h> /* realpath */
 #endif
 
-#include <libgen.h>
-
 #ifdef _WIN32
+#include <windows.h>
+#else
+#include <libgen.h> /* dirname */
 #endif
 
 char *get_app_dir()
@@ -59,6 +59,11 @@ char *get_exec_path()
         fprintf(stderr, "Can't get executable path\n");
         goto end;
     }
+    /* Get the real absolute path. */
+    if ((full_path = realpath(buf, NULL)) == NULL) {
+        perror("get_exec_path");
+        goto end;
+    }
 #elif defined(__linux__)
     size_t r;
     if ((buf = (char *)malloc(PATH_MAX)) == NULL) {
@@ -70,15 +75,40 @@ char *get_exec_path()
         goto end;
     }
     buf[r] = '\0';
-#endif
     /* Get the real absolute path. */
     if ((full_path = realpath(buf, NULL)) == NULL) {
         perror("get_exec_path");
         goto end;
     }
-
-    /* TODO Windows */
-    /* Windows: GetModuleFileName() with hModule = NULL */
+#elif defined(_WIN32)
+    int len = 0;
+    if ((buf = (char *)malloc(MAX_PATH + 1)) == NULL) {
+        fprintf(stderr, "insufficient memory\n");
+        goto end;
+    }
+    /* Call GetModuleFileName with hModule (first parameter) = NULL to get the path of
+    the executable file of the current process */
+    if ((len = GetModuleFileName(NULL,buf,MAX_PATH)) == 0) {
+        fprintf(stderr, "Can't get executable file path [%d]",GetLastError())
+        goto end;
+    }
+    /*  Windows XP: If path is too long the string is truncated to MAX_PATH characters
+        and is not null-terminated so we alloc MAX_PATH + 1 and set `len +1` to null */
+    buf[len + 1] = '\0';
+    /* Call GetFullPathName once to get the required buffer length (including the null character) */
+    if((len = GetFullPathName(buf, 0, NULL, NULL)) == 0) {
+        fprintf(stderr, "GetFullPathName failed (%d)\n", GetLastError());
+        goto end;
+    }
+    if ((full_path = (char *)malloc(len)) == NULL) {
+        fprintf(stderr, "insufficient memory\n");
+        goto end;
+    }
+    if((len = GetFullPathName(buf, len, full_path, NULL)) == 0) {
+        fprintf(stderr, "GetFullPathName failed (%d)\n", GetLastError());
+        goto end;
+    }
+#endif
 
 end:
     free(buf);
