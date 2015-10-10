@@ -13,7 +13,8 @@ cmake_minimum_required(VERSION 3.3)
 
 # Add the libary target. Note that we can't specify the source using
 # ${CMAKE_BINARY_DIR}/src/lfs.c because it's not yet copied in the build dir.
-add_library(liblfs SHARED src/lfs.c)
+# Include the def file to expose the module loading function on Windows (luaopen_lfs)
+add_library(liblfs SHARED src/lfs.c src/lfs.def)
 # Add dependencies targets
 # add_dependencies(liblfs copy_lfs libluajit) # Copy files to the build dir before building the shared library
 # add_dependencies(liblfs liblua)
