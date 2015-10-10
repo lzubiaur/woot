@@ -28,8 +28,10 @@ function fileutil.init()
         fileutil.getModulePath = function(name)
             return './bin/lib' .. name .. '.so'
         end
-    else
-        -- TODO Windows
+    elseif (jit.os == 'Windows') then
+        fileutil.getModulePath = function(name)
+            return './bin/' .. name .. '.dll'
+        end
     end
 end
 
