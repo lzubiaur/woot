@@ -31,7 +31,7 @@ char *get_app_dir()
         perror("get_app_dir");
         goto end;
     }
-    if ((dir = _strdup(buf)) == NULL) {
+    if ((dir = _strdup(dir_buf)) == NULL) {
         perror("get_app_dir");
         goto end;
     }
