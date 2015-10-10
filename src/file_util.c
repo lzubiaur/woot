@@ -1,8 +1,8 @@
 #include "file_util.h"
 
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>     /* malloc, free, realpath */
+#include <string.h>     /* strdup, _strdup */
+#include <stdlib.h>     /* malloc, free, realpath, _splitpath_s */
 
 #ifdef __APPLE__
 #include <mach-o/dyld.h> /* For _NSGetExecutablePath */
@@ -23,17 +23,31 @@
 
 char *get_app_dir()
 {
-    char *path = NULL, *dir = NULL, *buf = NULL;
+    char *path = NULL, *dir = NULL;
+#ifdef _WIN32
+    char drive_buf[_MAX_DRIVE], dir_buf[_MAX_DIR];
     if ((path = get_exec_path()) == NULL) goto end;
+    if(_splitpath_s(path, drive_buf, _MAX_DRIVE, dir_buf, _MAX_DIR, NULL, 0, NULL, 0) != 0) {
+        perror("get_app_dir");
+        goto end;
+    }
+    if ((dir = _strdup(buf)) == NULL) {
+        perror("get_app_dir");
+        goto end;
+    }
+#else
+    char *buf = NULL;
+    if ((path = get_exec_path()) == NULL) goto end;
+    /* dirname returns a pointer to internal storage space allocated on the first call */
     if ((buf = dirname(path)) == NULL) {
         perror("get_app_dir");
         goto end;
     }
-    if ((dir = (char*)malloc(strlen(buf) + 1)) == NULL) {
-        fprintf(stderr, "insufficient memory\n");
+    if ((dir = strdup(buf)) == NULL) {
+        perror("get_app_dir");
         goto end;
     }
-    strcpy(dir,buf);
+#endif
 
 end:
     free(path);
@@ -88,7 +102,7 @@ char *get_exec_path()
     }
     /* Call GetModuleFileName with hModule (first parameter) = NULL to get the path of
     the executable file of the current process */
-    if ((len = GetModuleFileName(NULL,buf,MAX_PATH)) == 0) {
+    if ((len = GetModuleFileName(NULL, buf, MAX_PATH)) == 0) {
         fprintf(stderr, "Can't get executable file path [%d]",GetLastError());
         goto end;
     }
@@ -104,7 +118,7 @@ char *get_exec_path()
         fprintf(stderr, "insufficient memory\n");
         goto end;
     }
-    if((len = GetFullPathName(buf, len, full_path, NULL)) == 0) {
+    if(GetFullPathName(buf, len, full_path, NULL) == 0) {
         fprintf(stderr, "GetFullPathName failed (%d)\n", GetLastError());
         goto end;
     }
