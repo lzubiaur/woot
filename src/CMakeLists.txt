@@ -35,28 +35,56 @@ elseif(BUILD_LINUX)
     # Runtime destination into the bundle
     set(BUNDLE_RUNTIME_DESTINATION ${BUNDLE_NAME}/bin)
 elseif(BUILD_WIN)
-    set(APP "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}/bin/${RUNTIME_TARGET}")
+    set(APP "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}/bin/${RUNTIME_TARGET}.exe")
     set(PLUGINS_DESTINATION "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}/bin")
     # Runtime destination into the bundle
     set(BUNDLE_RUNTIME_DESTINATION ${BUNDLE_NAME}/bin)
+    # create a WinMain() instead of just main()
+    # set_target_properties(${RUNTIME_TARGET} PROPERTIES WIN32_EXECUTABLE true)
 endif(BUILD_OSX)
 
 install(TARGETS ${RUNTIME_TARGET}
     BUNDLE  DESTINATION "." COMPONENT Runtime
     RUNTIME DESTINATION ${BUNDLE_RUNTIME_DESTINATION} COMPONENT Runtime
+    LIBRARY DESTINATION ${BUNDLE_RUNTIME_DESTINATION} COMPONENT Runtime
+    ARCHIVE DESTINATION ${BUNDLE_RUNTIME_DESTINATION} COMPONENT Runtime
     )
 
+# On Linux and MacOS we use fixup_bundle. On Windows use 
+# installrequiredsystemlibraries and manually copy plugins
 # directories to search for prerequisites. Libraries are copied automatically
 set(DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE})
+
 # Plugins are loadable bundles that extend the basic features of your application
 # On MacOSX it can be frameworks or shared lib not linked with the executable.
 # Plugins must be copied manually before they can be fixed by fixup_bundle.
 get_target_property(LFS_LIB_NAME liblfs OUTPUT_NAME)
-set(PLUGINS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}/${CMAKE_SHARED_LIBRARY_PREFIX}${LFS_LIB_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
-
-# GLFW
 get_target_property(GLFW_LIB_NAME glfw OUTPUT_NAME)
-list(APPEND PLUGINS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}/${CMAKE_SHARED_LIBRARY_PREFIX}${GLFW_LIB_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+
+# DLL shared libraries are build in the runtime directory on Windows
+if(BUILD_WIN)
+   set(LIB_OUTPUT "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}")
+else()
+   set(LIB_OUTPUT "${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE}")
+endif()
+# Use shorter variable for clarity
+set(LIB_PREFIX ${CMAKE_SHARED_LIBRARY_PREFIX})
+set(LIB_SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
+
+set(PLUGINS "${LIB_OUTPUT}/${LIB_PREFIX}${LFS_LIB_NAME}${LIB_SUFFIX}")
+list(APPEND PLUGINS "${LIB_OUTPUT}/${LIB_PREFIX}${GLFW_LIB_NAME}${LIB_SUFFIX}")
+
+if(BUILD_WIN)
+   set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNING FALSE)
+   set(CMAKE_INSTALL_DEBUG_LIBRARIES_ONLY FALSE)
+   set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP FALSE)
+   set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP_NO_WARNINGS FALSE)
+   set(CMAKE_INSTALL_MFC_LIBRARIES TRUE)
+   set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION "${BUNDLE_RUNTIME_DESTINATION}")
+   # Using install(CODE) does not work because the cmake environment is not exported
+   # install(CODE "include(InstallRequiredSystemLibraries)" COMPONENT Runtime)
+   include(InstallRequiredSystemLibraries)
+endif(BUILD_WIN)
 
 # Rebase the bundle using configurable cmake script (fixup_bundle.cmake.in)
 # Could be done using "install CODE" but it's more flexible using script. Plus get_filename_component
