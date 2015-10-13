@@ -75,11 +75,33 @@ set(PLUGINS "${LIB_OUTPUT}/${LIB_PREFIX}${LFS_LIB_NAME}${LIB_SUFFIX}")
 list(APPEND PLUGINS "${LIB_OUTPUT}/${LIB_PREFIX}${GLFW_LIB_NAME}${LIB_SUFFIX}")
 
 if(BUILD_WIN)
+   # Check the architecture 
+   if(CMAKE_CL_64)
+      if(MSVC_VERSION GREATER 1599)
+         # VS 10 and later:
+         set(CMAKE_MSVC_ARCH x64)
+      else()
+         # VS 9 and earlier:
+         set(CMAKE_MSVC_ARCH amd64)
+      endif()
+   else()
+      set(CMAKE_MSVC_ARCH x86)
+   endif()
+   
    set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNING FALSE)
    set(CMAKE_INSTALL_DEBUG_LIBRARIES_ONLY FALSE)
    set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP FALSE)
-   set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP_NO_WARNINGS FALSE)
-   set(CMAKE_INSTALL_MFC_LIBRARIES TRUE)
+   set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP_NO_WARNINGS OFF)
+   set(CMAKE_INSTALL_MFC_LIBRARIES FALSE)
+   set(PROG_FILES_DIR "$ENV{ProgramFiles}")
+   string(REGEX REPLACE "\\\\" "/" PROG_FILES_DIR ${PROG_FILES_DIR})
+   # Copy all the redistribuable C Runtime Libraries (CRT) so we can support pre-Windows10 systems
+   # without requestng the user to manually install VCRedist
+   # VCRedist may be installed automatically if an installer is used to install the application (see CPack)
+   # http://blogs.msdn.com/b/vcblog/archive/2015/03/03/introducing-the-universal-crt.aspx
+   file(GLOB CRT_REDIST_DLL "${PROG_FILES_DIR}/Windows Kits/10/Redist/ucrt/DLLs/${CMAKE_MSVC_ARCH}/*.dll")
+   # message(STATUS "DEBUG ${CRT_REDIST_DLL}")
+   set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS "${CRT_REDIST_DLL}")
    set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION "${BUNDLE_RUNTIME_DESTINATION}")
    # Using install(CODE) does not work because the cmake environment is not exported
    # install(CODE "include(InstallRequiredSystemLibraries)" COMPONENT Runtime)
