@@ -1,5 +1,6 @@
-### Compile on Linux (Debian/Ubuntu)
-Tested on debian 8 (jessie) and Ubuntu 15.04 (both 64bit version).
+### Build on Linux (Debian/Ubuntu)
+Tested on debian 8 (jessie) and Ubuntu 15.04 64bit.
+
 
 ### Dependencies - Required packages
 cmake
