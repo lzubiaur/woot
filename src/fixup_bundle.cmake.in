@@ -1,3 +1,6 @@
+# WARNING Running a script using INSTALL(SCRIPT) will not expose the CMake environment
+# and some module might not work (e.g. InstallRequiredSystemLibraries)
+
 set(APP @APP@)
 set(DIRS @DIRS@)
 set(PLUGINS @PLUGINS@)
