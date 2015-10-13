@@ -15,6 +15,7 @@
 #include <limits.h> /* realpath */
 #endif
 
+/* GetModuleFileName will link the executable against KERNEL32.DLL */
 #ifdef _WIN32
 #include <windows.h>
 #else
