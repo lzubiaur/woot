@@ -23,7 +23,7 @@ add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/luajit
 if(BUILD_WIN)
     add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/luajit/src/lua51.lib
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/luajit/src
-        COMMAND msvcbuild.bat
+        COMMAND msvcbuild.bat static
     )
 
     add_custom_target(lua_custom_build

@@ -22,7 +22,7 @@ require 'engine.fileutil'.init()
 local lfs = require 'lfs'
 print(lfs.currentdir())
 
-local glfw = require 'engine.glfw'('glfw')
+local glfw = require 'engine.glfw'(jit.os == 'Windows' and 'glfw3' or 'glfw')
 
 -- Initialize the library
 if glfw.Init() == 0 then

@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #ifdef _WIN32
+#include <windows.h> /* WinMain */
 #include <direct.h> /* _chdir */
 #else
 #include <unistd.h>
@@ -121,7 +122,15 @@ static int pmain(lua_State *L)
     return dofile(L,LUA_INIT_SCRIPT);
 }
 
+#ifdef _WIN32
+int CALLBACK WinMain(
+   HINSTANCE hInstance,
+   HINSTANCE hPrevInstance,
+   LPSTR     lpCmdLine,
+   int       nCmdShow)
+#else
 int main(int argc, char **argv)
+#endif
 {
     int status;
     char *dir = NULL;
@@ -155,3 +164,4 @@ int main(int argc, char **argv)
     lua_close(L);
     return status ? EXIT_FAILURE : EXIT_SUCCESS;
 }
+
