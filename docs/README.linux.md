@@ -1,7 +1,7 @@
-# Compile on Linux (Debian/Ubuntu)
+### Compile on Linux (Debian/Ubuntu)
 Tested on debian 8 (jessie) and Ubuntu 15.04 (both 64bit version).
 
-# Dependencies - Required packages
+### Dependencies - Required packages
 cmake
 gcc (should be installed with cmake)
 git-core
@@ -11,7 +11,7 @@ xorg-dev
 
 sudo apt-get install cmake git-core g++ libgl1-mesa-dev xorg-dev
 
-# Debugging
+### Debugging
 List the executable dependencies 
 ldd <executable>
 Check that the rpath are correct using patchelf
