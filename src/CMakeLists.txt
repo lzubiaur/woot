@@ -40,7 +40,7 @@ elseif(BUILD_WIN)
     # Runtime destination into the bundle
     set(BUNDLE_RUNTIME_DESTINATION ${BUNDLE_NAME}/bin)
     # create a WinMain() instead of just main()
-    # set_target_properties(${RUNTIME_TARGET} PROPERTIES WIN32_EXECUTABLE true)
+    set_target_properties(${RUNTIME_TARGET} PROPERTIES WIN32_EXECUTABLE true)
 endif(BUILD_OSX)
 
 install(TARGETS ${RUNTIME_TARGET}
