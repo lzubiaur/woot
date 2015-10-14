@@ -2,9 +2,9 @@
 
 ### Introduction
 
-**Woot** is a cross-platform Lua 2D game engine. Targeted platforms are Mac OS X, Linux and Windows.
+> This is a *work-in-progress* project and is subject to change without notice.
 
-This is a *work-in-progress* project and code/design will change frequently.
+**Woot** is a cross-platform Lua 2D game engine. Targeted platforms are Mac OS X, Linux and Windows.
 
 ### Build from source
 
