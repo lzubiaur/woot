@@ -26,7 +26,7 @@
 #define chdir(p) (_chdir(p))
 #endif
 
-static void logversion()
+static void l_version()
 {
     fputs(LUA_RELEASE " -- " LUA_COPYRIGHT ". \n", stdout);
     fputs(LUAJIT_VERSION " -- " LUAJIT_COPYRIGHT ". " LUAJIT_URL "\n", stdout);
@@ -38,28 +38,6 @@ static void l_message(const char *pname, const char *msg)
   fprintf(stderr, "%s\n", msg);
   fflush(stderr);
 }
-
-/* lua.c traceback */
-#if 0
-static int traceback(lua_State *L) {
-  if (!lua_isstring(L, 1))  /* 'message' not a string? */
-    return 1;  /* keep it intact */
-  lua_getfield(L, LUA_GLOBALSINDEX, "debug");
-  if (!lua_istable(L, -1)) {
-    lua_pop(L, 1);
-    return 1;
-  }
-  lua_getfield(L, -1, "traceback");
-  if (!lua_isfunction(L, -1)) {
-    lua_pop(L, 2);
-    return 1;
-  }
-  lua_pushvalue(L, 1);  /* pass error message */
-  lua_pushinteger(L, 2);  /* skip this function and traceback */
-  lua_call(L, 2, 1);  /* call debug.traceback */
-  return 1;
-}
-#endif
 
 /* luajit.c traceback */
 static int traceback(lua_State *L)
@@ -105,19 +83,11 @@ static int dofile(lua_State *L, const char *name)
   return report(L, status);
 }
 
-/*
-static int dostring(lua_State *L, const char *s, const char *name)
-{
-  int status = luaL_loadbuffer(L, s, strlen(s), name) || docall(L, 0, 1);
-  return report(L, status);
-}
-*/
-
 static int pmain(lua_State *L)
 {
     /* Load Lua libraries */
     luaL_openlibs(L);
-    logversion();
+    l_version();
 
     return dofile(L,LUA_INIT_SCRIPT);
 }
@@ -164,4 +134,3 @@ int main(int argc, char **argv)
     lua_close(L);
     return status ? EXIT_FAILURE : EXIT_SUCCESS;
 }
-
