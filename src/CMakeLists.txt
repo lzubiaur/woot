@@ -17,7 +17,7 @@ include_directories(${GLFW_HEADERS} ${PROJECT_BINARY_DIR})
 set(RUNTIME_TARGET ${PROJECT_NAME})
 
 add_executable(${RUNTIME_TARGET} main.c file_util.c)
-add_dependencies(${RUNTIME_TARGET} liblua liblfs)
+add_dependencies(${RUNTIME_TARGET} liblua liblfs glfw freetype)
 
 target_link_libraries(${RUNTIME_TARGET} liblua)
 
@@ -60,6 +60,8 @@ set(DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE})
 # Plugins must be copied manually before they can be fixed by fixup_bundle.
 get_target_property(LFS_LIB_NAME liblfs OUTPUT_NAME)
 get_target_property(GLFW_LIB_NAME glfw OUTPUT_NAME)
+# Freetype CMakeLists.txt does not set any OUTPUT_NAME for the library target
+# get_target_property(FREETYPE_LIB_NAME freetype OUTPUT_NAME)
 
 # DLL shared libraries are build in the runtime directory on Windows
 if(BUILD_WIN)
@@ -73,6 +75,7 @@ set(LIB_SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
 
 set(PLUGINS "${LIB_OUTPUT}/${LIB_PREFIX}${LFS_LIB_NAME}${LIB_SUFFIX}")
 list(APPEND PLUGINS "${LIB_OUTPUT}/${LIB_PREFIX}${GLFW_LIB_NAME}${LIB_SUFFIX}")
+list(APPEND PLUGINS "${LIB_OUTPUT}/${LIB_PREFIX}freetype${LIB_SUFFIX}")
 
 if(BUILD_WIN)
    # Check the architecture
