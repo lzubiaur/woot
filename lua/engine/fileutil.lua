@@ -32,6 +32,8 @@ function fileutil.init()
         fileutil.getModulePath = function(name)
             return './bin/' .. name .. '.dll'
         end
+    else
+        error('Unsupported platform')
     end
 end
 
