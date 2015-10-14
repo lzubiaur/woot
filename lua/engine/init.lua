@@ -19,7 +19,7 @@ require 'engine.fileutil'.init()
 local lfs = require 'lfs'
 print(lfs.currentdir())
 
--- GLFW shared library is libglfw.so on OSX and Linux but it's named glfw3.dll on Windows
+-- GLFW shared library is libglfw.so on Linux, libglfw.dylib OSX but it's named glfw3.dll on Windows
 local glfw = require 'engine.glfw'(jit.os == 'Windows' and 'glfw3' or 'glfw')
 
 -- Initialize the library
