@@ -17,7 +17,7 @@ require 'engine.fileutil'.init()
 
 -- Load Lua File System using `require`
 local lfs = require 'lfs'
-print(lfs.currentdir())
+print('Current directory is ', lfs.currentdir())
 
 -- GLFW shared library is libglfw.so on Linux, libglfw.dylib OSX but it's named glfw3.dll on Windows
 local glfw = require 'engine.glfw'(jit.os == 'Windows' and 'glfw3' or 'glfw')
@@ -33,8 +33,6 @@ if window == 0 then
   glfw.Terminate()
   return
 end
-
-local debugWindow = glfw.CreateWindow(200,480, "Debug")
 
 -- Make the window's context current
 glfw.MakeContextCurrent(window)
