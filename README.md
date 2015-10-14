@@ -1,3 +1,5 @@
+![WOOT](/docs/logo.png)
+
 ### Introduction
 
 > This is a *work-in-progress* project and is subject to change without notice.
@@ -14,9 +16,9 @@ cd woot
 ./bin/build-linux.sh
 ```
 
-To build on OSX use `./bin/build-osx.sh` and `.\bin\build-win.bat` on Windows. By default the project is built in `build/<platform>` and installed in `product`. Please see the platform specific requirements in the [docs](docs) subfolder.
+# test
 
-### Test
+To build on OSX use `./bin/build-osx.sh` and `.\bin\build-win.bat` on Windows. By default the project is built in `build/<platform>` and installed in `product`. Please see the platform specific requirements in the [docs](docs) subfolder.
 
 ### Binary distribution
 
