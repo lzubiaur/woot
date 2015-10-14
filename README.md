@@ -18,6 +18,4 @@ cd woot
 
 ### test
 
-### Binary distribution
-
 Binary distribution will be available for all supported platforms.
