@@ -12,6 +12,7 @@ xorg-dev
 ```
 sudo apt-get install cmake git-core g++ libgl1-mesa-dev xorg-dev
 ```
+
 ### Debugging
 
 List the executable dependencies

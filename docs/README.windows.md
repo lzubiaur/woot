@@ -1,14 +1,14 @@
-# Build on Windows
+### Build on Windows
 
 Tested on Windows 10 (32bits)
 
-# Requirements
+### Requirements
 
-CMake
-Git (to clone the project)
+CMake (3.3)
+Git (only to clone the project)
 Visual Studio Express 2015 (for Desktop)
 
-# Debug
+### Debug
 
 If build-win.bat can't find the CMake executable (cmake.exe) please make sure the CMake bin directory is set in your PATH environment variable.
 If not add to the current console session it as follow.
