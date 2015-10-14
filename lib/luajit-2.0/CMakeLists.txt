@@ -21,6 +21,8 @@ add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/luajit
 )
 
 if(BUILD_WIN)
+    # Build LuaJIT static library. If both static and dynamic libs are build then
+    # it's always linked against the dynamic lib but we want static linking.
     add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/luajit/src/lua51.lib
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/luajit/src
         COMMAND msvcbuild.bat static
