@@ -113,9 +113,8 @@ int main(int argc, char **argv)
     if ((dir = get_app_dir()) == NULL) {
         return EXIT_FAILURE;
     }
-    printf("Change current directory to %s\n",dir);
     if (chdir(dir) != 0) {
-        perror("Can't change to application directory");
+        perror("Can't change to the application directory");
         return EXIT_FAILURE;
     }
     if (chdir(res_dir) != 0) {
