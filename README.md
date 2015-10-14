@@ -16,11 +16,7 @@ cd woot
 ./bin/build-linux.sh
 ```
 
-To build on OSX use `./bin/build-osx.sh` and `.\bin\build-win.bat` on Windows.
-
-By default the project is built is `build/<platform>` and installed in `product`.
-
-Please see platform specific requirements in the [docs](docs) subfolder.
+To build on OSX use `./bin/build-osx.sh` and `.\bin\build-win.bat` on Windows. By default the project is built is `build/<platform>` and installed in `product`. Please see platform specific requirements in the [docs](docs) subfolder.
 
 ### Binary distribution
 
