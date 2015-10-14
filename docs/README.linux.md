@@ -15,11 +15,8 @@ sudo apt-get install cmake git-core g++ libgl1-mesa-dev xorg-dev
 
 ### Debugging
 
-List the executable dependencies
-ldd <executable>
+List the executable dependencies ```ldd <executable>```
 
-Check that the rpath are correct using patchelf
-patchelf --print-rpath <executable>
+Check that the rpath are correct using ```patchelf --print-rpath <executable>```
 
-Display ELF executable information
-readelf -d <executabl>
+Display ELF executable information ```readelf -d <executabl>```
