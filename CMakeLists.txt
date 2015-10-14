@@ -69,5 +69,5 @@ add_subdirectory(src)
 
 install(DIRECTORY lua DESTINATION ${BUNDLE_RESOURCE_PREFIX} COMPONENT Runtime)
 # Copy the content of the res folder into the package resource directory
-file(GLOB USER_RESOURCES res/*)
-install(FILES ${USER_RESOURCES} DESTINATION ${BUNDLE_RESOURCE_PREFIX})
+file(GLOB USER_RESOURCES RELATIVE "${PROJECT_SOURCE_DIR}" "res/*")
+file(COPY ${USER_RESOURCES} DESTINATION ${CMAKE_INSTALL_PREFIX}/${BUNDLE_RESOURCE_PREFIX})
