@@ -50,7 +50,7 @@ install(TARGETS ${RUNTIME_TARGET}
     ARCHIVE DESTINATION ${BUNDLE_RUNTIME_DESTINATION} COMPONENT Runtime
     )
 
-# On Linux and MacOS we use fixup_bundle. On Windows use 
+# On Linux and MacOS we use fixup_bundle. On Windows use
 # installrequiredsystemlibraries and manually copy plugins
 # directories to search for prerequisites. Libraries are copied automatically
 set(DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE})
@@ -75,7 +75,7 @@ set(PLUGINS "${LIB_OUTPUT}/${LIB_PREFIX}${LFS_LIB_NAME}${LIB_SUFFIX}")
 list(APPEND PLUGINS "${LIB_OUTPUT}/${LIB_PREFIX}${GLFW_LIB_NAME}${LIB_SUFFIX}")
 
 if(BUILD_WIN)
-   # Check the architecture 
+   # Check the architecture
    if(CMAKE_CL_64)
       if(MSVC_VERSION GREATER 1599)
          # VS 10 and later:
@@ -87,7 +87,7 @@ if(BUILD_WIN)
    else()
       set(CMAKE_MSVC_ARCH x86)
    endif()
-   
+
    set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNING FALSE)
    set(CMAKE_INSTALL_DEBUG_LIBRARIES_ONLY FALSE)
    set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP FALSE)
@@ -114,14 +114,6 @@ endif(BUILD_WIN)
 set(fixup_bundle ${PROJECT_BINARY_DIR}/fixup_bundle.cmake)
 configure_file(fixup_bundle.cmake.in ${fixup_bundle} @ONLY)
 install(SCRIPT ${fixup_bundle} COMPONENT Runtime)
-
-# rebase the bundle (Update the runtime and libraries RPATH) to make a standalone
-# bundle.
-# install(CODE "
-#     configure_file(${PLUGIN_LFS} ${PLUGIN_DESTINATION} COPYONLY)
-#     include(BundleUtilities)
-#     fixup_bundle(\"${APPS}\" \"${PLUGIN_DESTINATION}/liblfs.dylib\" \"${DIRS}\")
-#     " COMPONENT Runtime)
 
 # Supported MacOSX package:
 # CPACK_BINARY_BUNDLE       Enable to build OSX bundles
