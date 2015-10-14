@@ -31,8 +31,13 @@
 extern "C" {
 #endif
 
+/* Get the directory absolute path of the executable.
+ * The path string must be freed by the caller.
+ */
 char *get_app_dir();
-/* Return the executable absolute path */
+/* Get the executable absolute path (no symbolic link, /./ or /../ components are resolved).
+ * The string is dynamically allocated and must be freed by the caller.
+ */
 char *get_exec_path();
 
 #ifdef __cplusplus
