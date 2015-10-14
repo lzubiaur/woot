@@ -1,5 +1,3 @@
-![WOOT](/docs/logo.png)
-
 ### Introduction
 
 > This is a *work-in-progress* project and is subject to change without notice.
@@ -22,4 +20,4 @@ To build on OSX use `./bin/build-osx.sh` and `.\bin\build-win.bat` on Windows. B
 
 ### Binary distribution
 
-Binary distribution will be available for all supported target platforms.
+Binary distribution will be available for all supported platforms.
