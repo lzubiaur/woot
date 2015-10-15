@@ -16,4 +16,5 @@ add_subdirectory(glfw)
 add_subdirectory(luajit-2.0)
 add_subdirectory(luafilesystem)
 add_subdirectory(freetype-2.6)
+add_subdirectory(DevIL)
 
