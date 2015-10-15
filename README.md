@@ -21,3 +21,7 @@ To build on OSX use `./bin/build-osx.sh` and `.\bin\build-win.bat` on Windows. B
 ### Binary distribution
 
 Binary distribution will be available for all supported platforms.
+
+### Roadmap
+
+* [version 0.1ß](https://trello.com/b/WYN7lWRa/woot-0-1ss)
