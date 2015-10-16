@@ -18,15 +18,16 @@ OPTION(BUILD_SHARED_LIBS "Build with shared (.DLL .SO) libraries." ON)
 test_big_endian(WORDS_BIGENDIAN)
 
 
+# Don't use system libraries but rather project's 3rd party libraries
 # check availability of optional external libs
-find_package(PNG)
-find_package(TIFF)
-find_package(JPEG)
-find_package(Jasper)
-find_package(Squish)
-find_package(NVTT)      # NVidia texture tools
-find_package(OpenEXR)
-find_package(LCMS)
+# find_package(PNG)
+# find_package(TIFF)
+# find_package(JPEG)
+# find_package(Jasper)
+# find_package(Squish)
+# find_package(NVTT)      # NVidia texture tools
+# find_package(OpenEXR)
+# find_package(LCMS)
 
 # TODO: check for libmng, others?
 
