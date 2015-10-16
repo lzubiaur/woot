@@ -9,6 +9,7 @@ INCLUDE_DIRECTORIES(
 
 	${DevIL_SOURCE_DIR}/include
 	${DevIL_SOURCE_DIR}/../include
+        ${PROJECT_BINARY_DIR}/../include
 )
 
 #SET(DevIL_INC ${DEVIL_INCS} ${DEVIL_SRCS})

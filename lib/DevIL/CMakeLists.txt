@@ -103,7 +103,7 @@ endif(SQUISH_FOUND)
 
 
 # generate the config.h
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/IL/config.h.cmake.in ${CMAKE_CURRENT_SOURCE_DIR}/include/IL/config.h)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/IL/config.h.cmake.in ${PROJECT_BINARY_DIR}/include/IL/config.h)
 
 #SET(DEVIL_INCS
 #
