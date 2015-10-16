@@ -28,9 +28,14 @@ set(JPEG_INCLUDES
    jpeglib.h jversion.h cdjpeg.h cderror.h transupp.h
    )
 
+# Configure JPEG (jconfig.h). See http://www.vtk.org/Wiki/CMake:How_To_Write_Platform_Checks
+include(CheckIncludeFile)
+check_include_file(stdlib.h HAVE_STDLIB_H)
+check_include_file(stddef.h HAVE_STDDEF_H)
+
 configure_file(jconfig.cmake.in ${PROJECT_BINARY_DIR}/jconfig.h)
 
 include_directories(${JPEG_INCLUDES} ${PROJECT_BINARY_DIR})
 add_library(jpeg SHARED ${LIB_SRC} ${SYS_DEP_SRC})
-target_include_directories(jpeg ${JPEG_INCLUDE} ${PROJECT_BINARY_DIR}/jconfig.h)
+# target_include_directories(jpeg "${PROJECT_BINARY_DIR}/jconfig.h")
 
