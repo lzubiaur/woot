@@ -13,6 +13,7 @@ include(CMakeDependentOption)
 #set(CMAKE_C_FLAGS "-std=c99")
 
 OPTION(BUILD_SHARED_LIBS "Build with shared (.DLL .SO) libraries." ON)
+OPTION(INSTALL_IL "Install IL library and headers." OFF)
 
 # various compiler stuff
 test_big_endian(WORDS_BIGENDIAN)

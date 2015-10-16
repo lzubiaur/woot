@@ -103,9 +103,12 @@ target_link_libraries(DevIL ${libs})
 
 # Installation
 
+if(INSTALL_IL)
 install (TARGETS DevIL
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
 )
 install (FILES ../include/IL/il.h DESTINATION include/IL)
+endif(INSTALL_IL)
+
