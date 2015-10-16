@@ -3,6 +3,8 @@
 # party library in another project. No examples or command-line tools are build.
 cmake_minimum_required(VERSION 3.3. FATAL_ERROR)
 
+project(libjpeg C)
+
 # List of source files to build the library from makefile.ansi
 set(LIB_SRC
    jaricom.c jcapimin.c jcapistd.c jcarith.c jccoefct.c jccolor.c
@@ -16,11 +18,7 @@ set(LIB_SRC
    )
 # Memory managner back end. Compile only one of these into a working library. See install.txt
 set(SYS_DEP_SRC
-    jmemnobs.c
-    # jmemansi.c
-    # jmemname.c
-    # jmemdos.c
-    # jmemmac.c
+    jmemnobs.c # jmemansi.c jmemname.c jmemdos.c jmemmac.c
     )
 # files included by source files
 set(JPEG_INCLUDES
@@ -37,5 +35,4 @@ configure_file(jconfig.cmake.in ${PROJECT_BINARY_DIR}/jconfig.h)
 
 include_directories(${JPEG_INCLUDES} ${PROJECT_BINARY_DIR})
 add_library(jpeg SHARED ${LIB_SRC} ${SYS_DEP_SRC})
-# target_include_directories(jpeg "${PROJECT_BINARY_DIR}/jconfig.h")
-
+target_include_directories(jpeg PUBLIC ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR})
