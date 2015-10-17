@@ -116,7 +116,7 @@ endif(BUILD_WIN)
 # Could be done using "install CODE" but it's more flexible using script. Plus get_filename_component
 # doesn't seem to work in embedded script ("install CODE").
 set(fixup_bundle ${PROJECT_BINARY_DIR}/fixup_bundle.cmake)
-configure_file(fixup_bundle.cmake.in ${fixup_bundle} @ONLY)
+configure_file(../cmake/fixup_bundle.cmake.in ${fixup_bundle} @ONLY)
 install(SCRIPT ${fixup_bundle} COMPONENT Runtime)
 
 # Supported MacOSX package:
