@@ -16,10 +16,10 @@ include_directories(${GLFW_HEADERS} ${PROJECT_BINARY_DIR})
 
 set(RUNTIME_TARGET ${PROJECT_NAME})
 
-add_executable(${RUNTIME_TARGET} main.c file_util.c)
-add_dependencies(${RUNTIME_TARGET} liblua liblfs glfw freetype)
+add_executable(${RUNTIME_TARGET} main.c file_util.c imgui_impl_glfw_gl3.cpp)
+add_dependencies(${RUNTIME_TARGET} liblua liblfs glfw freetype imgui)
 
-target_link_libraries(${RUNTIME_TARGET} liblua)
+target_link_libraries(${RUNTIME_TARGET} liblua imgui glfw)
 
 if(BUILD_OSX)
     set(APP "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}")
