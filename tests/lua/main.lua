@@ -1,3 +1,4 @@
+-- test main file
 -- Set the Lua module search path
 package.path = './lua/?.lua'
 
