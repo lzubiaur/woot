@@ -12,14 +12,13 @@ set(ENGINE_VERSION_FULL "${ENGINE_VERSION}.${ENGINE_VERSION_PATCH}${ENGINE_VERSI
 
 configure_file("config.h.in" "${PROJECT_BINARY_DIR}/config.h")
 
-include_directories(${GLFW_HEADERS} ${PROJECT_BINARY_DIR})
+include_directories(${GLFW_HEADERS} ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
 
 set(RUNTIME_TARGET ${PROJECT_NAME})
 
-add_executable(${RUNTIME_TARGET} main.c file_util.c imgui_impl_glfw_gl3.cpp)
-add_dependencies(${RUNTIME_TARGET} liblua liblfs glfw freetype imgui)
-
-target_link_libraries(${RUNTIME_TARGET} liblua imgui glfw gl3w)
+add_executable(${RUNTIME_TARGET} main.c file_util.c)
+add_dependencies(${RUNTIME_TARGET} liblua liblfs freetype glfw imgui)
+target_link_libraries(${RUNTIME_TARGET} liblua)
 
 if(BUILD_OSX)
     set(APP "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}")
@@ -76,7 +75,9 @@ set(LIB_SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
 set(PLUGINS "${LIB_OUTPUT}/${LIB_PREFIX}${LFS_LIB_NAME}${LIB_SUFFIX}")
 list(APPEND PLUGINS "${LIB_OUTPUT}/${LIB_PREFIX}${GLFW_LIB_NAME}${LIB_SUFFIX}")
 list(APPEND PLUGINS "${LIB_OUTPUT}/${LIB_PREFIX}freetype${LIB_SUFFIX}")
+list(APPEND PLUGINS "${LIB_OUTPUT}/${LIB_PREFIX}imgui${LIB_SUFFIX}")
 list(APPEND PLUGINS "${LIB_OUTPUT}/${LIB_PREFIX}DevIL${LIB_SUFFIX}")
+list(APPEND PLUGINS "${LIB_OUTPUT}/${LIB_PREFIX}tests${LIB_SUFFIX}")
 
 if(BUILD_WIN)
    # Check the architecture
