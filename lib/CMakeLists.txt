@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.3)
 project(lib)
 
-set(GLFW_HEADERS "${PROJECT_SOURCE_DIR}/glfw/include" PARENT_SCOPE)
+set(GLFW_HEADERS "${PROJECT_SOURCE_DIR}/glfw/include")
 
 # GLFW options
 # option(BUILD_SHARED_LIBS ON)
@@ -25,3 +25,5 @@ add_subdirectory(freetype-2.6)
 add_subdirectory(jpeg-9b)
 add_subdirectory(DevIL)
 add_subdirectory(imgui)
+
+set(GLFW_HEADERS "${PROJECT_SOURCE_DIR}/glfw/include" PARENT_SCOPE)
