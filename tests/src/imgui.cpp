@@ -1,14 +1,16 @@
 // ImGui test
 
+#include "tests.h"
+
 #include <imgui.h>
 #include "imgui_impl_glfw_gl3.h"
 #include <stdio.h>
 
 void imgui_test_render()
 {
-
-    int show_test_window = true;
-    int show_another_window = false;
+    bool show_test_window = true;
+    bool show_another_window = false;
+    ImVec4 clear_color = ImColor(114, 144, 154);
 
     ImGui_ImplGlfwGL3_NewFrame();
 
