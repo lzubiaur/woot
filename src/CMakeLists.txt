@@ -19,7 +19,7 @@ set(RUNTIME_TARGET ${PROJECT_NAME})
 add_executable(${RUNTIME_TARGET} main.c file_util.c imgui_impl_glfw_gl3.cpp)
 add_dependencies(${RUNTIME_TARGET} liblua liblfs glfw freetype imgui)
 
-target_link_libraries(${RUNTIME_TARGET} liblua imgui glfw)
+target_link_libraries(${RUNTIME_TARGET} liblua imgui glfw gl3w)
 
 if(BUILD_OSX)
     set(APP "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}")
