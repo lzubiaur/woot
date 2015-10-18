@@ -17,6 +17,7 @@ set(JPEG_LIBRARIES jpeg)
 set(JPEG_FOUND TRUE)
 
 # Add third-party libraries
+add_subdirectory(gl3w)
 add_subdirectory(glfw)
 add_subdirectory(luajit-2.0)
 add_subdirectory(luafilesystem)
