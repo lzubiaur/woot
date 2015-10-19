@@ -11,39 +11,42 @@ local fileutil = require 'engine.fileutil'
 ffi.cdef [[
     void test_1();
     void imgui_test_render();
-    ]]
---[[
-    void ImGui_ImplGlfwGL3_Shutdown();
-    void ImGui_ImplGlfwGL3_NewFrame();
-
-    void ImGui_ImplGlfwGL3_InvalidateDeviceObjects();
-    bool ImGui_ImplGlfwGL3_CreateDeviceObjects();
-
-    void ImGui_ImplGlfwGL3_MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
-    void ImGui_ImplGlfwGL3_ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
-    void ImGui_ImplGlfwGL3_KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-    void ImGui_ImplGlfwGL3_CharCallback(GLFWwindow* window, unsigned int c);
 ]]
 
+-- Test binding
 local tests_bind = ffi.load(fileutil.getModulePath('tests'))
 tests_bind.test_1()
-tests_bind.imgui_test_render()
 
 local viewport = require 'engine.viewport'
 
 viewport.init()
-viewport.create(480,320,'test')
+local window = viewport.create(1280, 720,'test')
+assert(window,'Cannot create window')
 
 ffi.cdef [[
-    typedef struct GLFWwindow GLFWwindow;
-    bool ImGui_ImplGlfwGL3_Init(GLFWwindow* window, bool install_callbacks);
-    ]]
+    typedef void (*GL3WglProc)(void);
+    /* gl3w api */
+    int gl3wInit(void);
+    int gl3wIsSupported(int major, int minor);
+    GL3WglProc gl3wGetProcAddress(const char *proc);
+]]
 
+local gl3w_bind = ffi.load(fileutil.getModulePath('gl3w'))
+gl3w_bind.gl3wInit()
+print(gl3w_bind.gl3wIsSupported(1,0))
+
+ffi.cdef [[
+    struct GLFWwindow;
+    bool ImGui_ImplGlfwGL3_Init(GLFWwindow* window, bool install_callbacks);
+]]
 local imgui_bind = ffi.load(fileutil.getModulePath('imgui'))
-imgui_bind.ImGui_ImplGlfwGL3_Init(viewport.window, false)
+
+imgui_bind.ImGui_ImplGlfwGL3_Init(window, true)
 
 viewport.addNode {
     process = function(delta)
+        -- print 'DEBUG process'
+        tests_bind.imgui_test_render()
     end,
     render = function()
         -- body...
