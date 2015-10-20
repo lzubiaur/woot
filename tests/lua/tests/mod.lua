@@ -10,3 +10,15 @@
 -- Load Lua File System using `require`
 local lfs = require 'lfs'
 print('Current directory is ', lfs.currentdir())
+
+-- Test LuaJIT FFI binding
+local fileutil = require 'engine.fileutil'
+local ffi      = require 'ffi'
+-- C declaration
+ffi.cdef [[
+    void test_C_module_binding();
+]]
+-- Load the module
+local tests = ffi.load(fileutil.getModulePath('tests'))
+-- Call the C function
+tests.test_C_module_binding()
