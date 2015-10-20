@@ -35,6 +35,7 @@ function fileutil.init()
     else
         error('Unsupported platform')
     end
+    return fileutil
 end
 
 -- Return this package
