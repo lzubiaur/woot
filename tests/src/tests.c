@@ -3,7 +3,7 @@
 
 #include "tests.h"
 
-void test_1()
+void test_C_module_binding()
 {
-    printf("Hello tests\n");
+    printf("Hello tests!\n");
 }

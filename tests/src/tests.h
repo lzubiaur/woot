@@ -13,7 +13,7 @@ extern "C" {
  * as `__Z17imgui_test_renderv` in the shared library. When using C linkage it has the
  * symbole `_imgui_test_render`.
  */
-void test_1();
+void test_C_module_binding();
 void imgui_test_render();
 
 #ifdef __cplusplus
