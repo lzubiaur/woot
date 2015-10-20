@@ -14,7 +14,7 @@ local Viewport = {}
 local scene_tree = {}
 local window = nil
 
-function Viewport.create(width, height, windowName)
+function Viewport.create(width, height, windowName, isFullScreen)
     -- Can only be called once
     if window then return nil end
 
@@ -31,17 +31,18 @@ function Viewport.create(width, height, windowName)
     glfw.WindowHint('CONTEXT_VERSION_MINOR', 3);
     -- specifies which OpenGL profile to create the context for:
     -- OPENGL_CORE_PROFILE or OPENGL_COMPAT_PROFILE, or OPENGL_ANY_PROFILE.
-    -- If requesting an OpenGL version below 3.2, OPENGL_ANY_PROFILE must be used
+    -- If requesting an OpenGL version *below* 3.2, OPENGL_ANY_PROFILE must be used
+    -- We use OPENGL_CORE_PROFILE which only supports the new core functionality.
     glfw.WindowHint('OPENGL_PROFILE', 'OPENGL_CORE_PROFILE');
     if (jit.os == 'OSX') then
         -- OpenGL context should be forward-compatible (all functionality deprecated in the requested version of OpenGL is removed)
         -- This may only be used if the requested OpenGL version is 3.0 or above.
         glfw.WindowHint('OPENGL_FORWARD_COMPAT', 1);
     end
-    -- Resizable window in non fullscreen mode
-    -- glfw.WindowHint('RESIZABLE',1)
+    -- Don't allow resizable window
+    glfw.WindowHint('RESIZABLE', 0)
 
-    window = glfw.CreateWindow(width, height, windowName)
+    window = glfw.CreateWindow(width, height, windowName, isFullScreen and glfw.GetPrimaryMonitor() or nil, nil)
     if window == nil then
       glfw.Terminate()
       return nil
