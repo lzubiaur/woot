@@ -8,5 +8,6 @@ require 'tests.mod'
 viewport.create(1280, 720, 'Woot Game Egine')
 -- Load the GUI test
 viewport.addNode(require 'tests.imgui')
+viewport.addNode(require 'tests.images')
 -- Run the tests
 viewport.run()
