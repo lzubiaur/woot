@@ -45,6 +45,7 @@ ELSE(BUILD_SHARED_LIBS)
     ADD_LIBRARY(DevIL ${DevIL_SRCS} ${DevIL_INC} ${DevIL_RSRC} ${DevIL_TXT})
 ENDIF(BUILD_SHARED_LIBS)
 
+target_include_directories(DevIL PUBLIC "${DevIL_SOURCE_DIR}/../include" "${PROJECT_BINARY_DIR}/../include")
 
 # configure include dirs and linkage for the optional external libs
 set(libs "")
@@ -112,4 +113,3 @@ install (TARGETS DevIL
 )
 install (FILES ../include/IL/il.h DESTINATION include/IL)
 endif(INSTALL_IL)
-
