@@ -15,6 +15,7 @@ extern "C" {
  */
 void test_C_module_binding();
 void imgui_test_render();
+void load_image(const char*filename);
 
 #ifdef __cplusplus
 }
