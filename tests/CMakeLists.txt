@@ -5,9 +5,9 @@ project(tests C CXX)
 
 # LuaJIT
 include_directories(${PROJECT_SOURCE_DIR}/src)
-add_library(tests src/tests.h src/tests.c src/imgui.cpp)
-add_dependencies(tests imgui)
-target_link_libraries(tests imgui)
+add_library(tests src/tests.h src/tests.c src/imgui.cpp src/devil.c)
+add_dependencies(tests imgui DevIL)
+target_link_libraries(tests imgui DevIL)
 
 # The tests library is intalled using the plugin facility (see src/CMakeLists.txt)
 # if(BUILD_OSX)
