@@ -1,22 +1,29 @@
-local Viewport = {}
+-- set the C module (shared library) search path
+package.cpath = '../MacOS/lib?.dylib;./bin/lib?.so;./bin/?.dll'
 
+-- Must init fileutil before loading any module
+local fileutil = require 'engine.fileutil'.init()
 -- GLFW shared library is libglfw.so on Linux, libglfw.dylib OSX but it's named glfw3.dll on Windows
-local name = (jit.os == 'Windows') and 'glfw' or 'glfw.3'
-local glfw = require 'engine.glfw'(name)
-
+local glfw = require 'engine.glfw'(jit.os == 'Windows' and 'glfw' or 'glfw.3')
+local gl3w = require 'engine.gl3w'
+local gl = require 'engine.gl'
 local jit = require 'jit'
+local ffi = require 'ffi'
 
+local Viewport = {}
 local scene_tree = {}
 local window = nil
 
-function Viewport.init()
-    -- Initialize GLFW
-    if glfw.Init() == 0 then
-        return false
-    end
-end
-
 function Viewport.create(width, height, windowName)
+    -- Can only be called once
+    if window then return nil end
+
+    -- Initialize the GLFW module
+    if glfw.Init() == 0 then
+        -- TODO throw error
+        return nil
+    end
+
     -- specify the client API version that the created context must be compatible with
     -- glfwCreateWindow will still fail if the resulting OpenGL version is less than the one requested
     -- ImGui requires OpenGL 3.3
@@ -37,7 +44,16 @@ function Viewport.create(width, height, windowName)
     window = glfw.CreateWindow(width, height, windowName)
     if window == nil then
       glfw.Terminate()
+      return nil
     end
+
+    -- Init GL3W. Must be called after glfw.CreateWindow (OpenGL context created)
+    if gl3w.gl3wInit() == 0 then
+        -- TODO throw error
+        return nil
+    end
+
+    Viewport.getWindow = function() return window end
     return window
 end
 
@@ -54,23 +70,30 @@ function Viewport.run()
 
     -- Loop until the user closes the window
     while glfw.WindowShouldClose(window) == 0 do
+        -- Poll for and process events
+        glfw.PollEvents()
+
         delta = (prev_time > 0.0) and (glfw.GetTime() - g_Time) or (1.0/60.0);
-        -- Render here
         for _,node in ipairs(scene_tree) do
             node.process(delta)
         end
 
-        -- for _,node in ipairs(scene_tree) do
-        --     node.render()
-        -- end
+        -- Clean buffer
+        gl.glClearColor(0.3,0.3,0.3,1)
+        local width, height = glfw.GetFramebufferSize(window)
+        gl.glViewport(0, 0, width, height);
+        gl.glClear(gl.GL_COLOR_BUFFER_BIT);
+
+        -- Render the scene tree
+        for _,node in ipairs(scene_tree) do
+            node.render()
+        end
 
         -- Swap front and back buffers
         glfw.SwapBuffers(window)
-
-        -- Poll for and process events
-        glfw.PollEvents()
     end
 
+    glfw.DestroyWindow(window)
     glfw.Terminate()
 end
 
