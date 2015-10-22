@@ -6,13 +6,13 @@ local fileutil = require 'engine.fileutil'.init()
 -- GLFW shared library is libglfw.so on Linux, libglfw.dylib OSX but it's named glfw3.dll on Windows
 local glfw = require 'engine.glfw'(jit.os == 'Windows' and 'glfw' or 'glfw.3')
 local gl3w = require 'engine.gl3w'
-local gl = require 'engine.gl'
-local jit = require 'jit'
-local ffi = require 'ffi'
+local gl   = require 'engine.gl'
+local jit  = require 'jit'
+local ffi  = require 'ffi'
 
-local Viewport = {}
+local Viewport   = {}
 local scene_tree = {}
-local window = nil
+local window     = nil
 
 function Viewport.create(width, height, windowName, isFullScreen)
     -- Can only be called once
@@ -80,7 +80,7 @@ function Viewport.run()
         end
 
         -- Clean buffer
-        gl.glClearColor(0.3,0.3,0.3,1)
+        gl.glClearColor(0.3,0.28,0.35,1)
         local width, height = glfw.GetFramebufferSize(window)
         gl.glViewport(0, 0, width, height);
         gl.glClear(gl.GL_COLOR_BUFFER_BIT);
