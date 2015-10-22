@@ -4,10 +4,11 @@ package.path = './lua/?.lua'
 local viewport = require 'engine.viewport'
 -- Test module loading and binding. Must be called after the engine is loaded (require 'engine.viewport')
 require 'tests.mod'
--- Create the viewport
-viewport.create(1280, 720, 'Woot Game Egine')
+-- Create a windowed viewport
+viewport.create(1280, 720, 'Woot Game Egine', false)
 -- Load the GUI test
 viewport.addNode(require 'tests.imgui')
-viewport.addNode(require 'tests.images')
+-- viewport.addNode(require 'tests.images')
+viewport.addNode(require 'tests.gl')
 -- Run the tests
 viewport.run()
