@@ -961,6 +961,7 @@ cursor_mt.__index = cursor_mt
 cursor_mt.Destroy = mod.DestroyCursor
 
 
+-- These functions can't be jit compiled, because they may call callbacks.
 jit.off(mod.PollEvents)
 jit.off(mod.WaitEvents)
 
