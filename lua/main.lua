@@ -7,8 +7,8 @@ require 'tests.mod'
 -- Create a windowed viewport
 viewport.create(1280, 720, 'Woot Game Egine', false)
 -- Load the GUI test
+viewport.addNode(require 'tests.gl')
 viewport.addNode(require 'tests.imgui')
 -- viewport.addNode(require 'tests.images')
-viewport.addNode(require 'tests.gl')
 -- Run the tests
 viewport.run()
