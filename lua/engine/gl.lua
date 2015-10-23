@@ -38,7 +38,26 @@ function mod.createShader(source, type)
     return shader
 end
 
+function mod.getError()
+    local err = tonumber(bind.glGetError())
+    while err ~= bind.GL_NO_ERROR do
+        if err == bind.GL_INVALID_ENUM then
+            print('OpenGL Error: GL_INVALID_ENUM', err)
+        elseif err == bind.GL_INVALID_VALUE then
+            print('OpenGL Error: GL_INVALID_VALUE', err)
+        elseif err == bind.GL_INVALID_OPERATION then
+            print('OpenGL Error: GL_INVALID_OPERATION', err)
+        elseif err == bind.GL_INVALID_FRAMEBUFFER_OPERATION then
+            print('OpenGL Error: GL_INVALID_FRAMEBUFFER_OPERATION', err)
+        elseif err == bind.GL_OUT_OF_MEMORY then
+            print('OpenGL Error: GL_OUT_OF_MEMORY', err)
+        end
+    end
+end
+
 function mod.createProgram(vert, frag)
+    -- Purge error
+    bind.glGetError()
     local program = bind.glCreateProgram()
 
     local vertexShader   = mod.createShader(vert, bind.GL_VERTEX_SHADER)
@@ -48,10 +67,20 @@ function mod.createProgram(vert, frag)
     bind.glAttachShader(program, fragmentShader)
 
     bind.glLinkProgram(program)
-    local errnum = tonumber(bind.glGetError())
-    if errnum ~= 0 then
-        print('Link program FAILED: ', errnum)
+
+    local status = ffi.new('GLint[1]',0)
+    bind.glGetProgramiv(program, bind.GL_LINK_STATUS, status);
+    if status == bind.GL_FALSE then
+	    local maxLength = ffi.new('GLint[1]',0);
+	    bind.glGetProgramiv(program, bind.GL_INFO_LOG_LENGTH, maxLength);
+	    -- The maxLength includes the NULL character
+        local buf = ffi.new('GLchar[?]', maxLength)
+	    bind.glGetProgramInfoLog(program, maxLength[0], maxLength, buf);
+        print('Progam linking FAILED.')
+        print(buf)
     end
+
+    mod.getError()
 
     return program
 end
