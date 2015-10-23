@@ -656,4 +656,6 @@ void glEnableVertexAttribArray (GLuint index);
 void glVertexAttribPointer (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid *pointer);
 GLint glGetAttribLocation (GLuint program, const GLchar *name);
 void glUseProgram (GLuint program);
+void glGetProgramiv (GLuint program, GLenum pname, GLint *params);
+void glGetProgramInfoLog (GLuint program, GLsizei bufSize, GLsizei *length, GLchar *infoLog);
 ]]
