@@ -1,6 +1,6 @@
 -- ImGui tests
 
-local ffi = require 'ffi'
+local ffi      = require 'ffi'
 local fileutil = require 'engine.fileutil'
 local viewport = require 'engine.viewport'
 
