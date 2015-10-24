@@ -69,6 +69,7 @@ function Viewport.run()
     local prev_time = 0.0
     local delta = 0.0
 
+    -- scene events: enter, ready, exit, process, pause, unpause 
     -- Loop until the user closes the window
     while glfw.WindowShouldClose(window) == 0 do
         -- Poll for and process events
