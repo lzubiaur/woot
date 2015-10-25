@@ -69,7 +69,7 @@ function Viewport.run()
     local prev_time = 0.0
     local delta = 0.0
 
-    -- scene events: enter, ready, exit, process, pause, unpause 
+    -- scene events: enter, ready, exit, process, pause, unpause
     -- Loop until the user closes the window
     while glfw.WindowShouldClose(window) == 0 do
         -- Poll for and process events
@@ -81,10 +81,10 @@ function Viewport.run()
         end
 
         -- Clean buffer
-        gl.glClearColor(0.3,0.28,0.35,1)
+        gl.clearColor(0.3,0.28,0.35,1)
         local width, height = glfw.GetFramebufferSize(window)
-        gl.glViewport(0, 0, width, height);
-        gl.glClear(gl.GL_COLOR_BUFFER_BIT);
+        gl.viewport(0, 0, width, height);
+        gl.clear(gl.COLOR_BUFFER_BIT);
 
         -- Render the scene tree
         for _,node in ipairs(scene_tree) do

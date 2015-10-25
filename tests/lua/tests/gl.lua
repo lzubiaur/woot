@@ -1,3 +1,5 @@
+-- Test OpenGL Lua binding
+-- WARNING shader must be compiled after glfwMakeContextCurrent is called.
 local gl       = require 'engine.gl'
 local ffi      = require 'ffi'
 local fileutil = require 'engine.fileutil'
@@ -6,8 +8,8 @@ local render_test        = nil
 local program, posAttrib = nil, nil
 
 function _render()
-    gl.glUseProgram(program)
-    gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3)
+    gl.useProgram(program)
+    gl.drawArrays(gl.TRIANGLES, 0, 3)
 end
 
 function _init()
@@ -33,18 +35,18 @@ function _init()
     local vbo = ffi.new 'GLuint[1]'
     local vertices = ffi.new('float[6]', { 0.0, 0.5, 0.5, -0.5, -0.5, -0.5} )
 
-    gl.glGenBuffers(1, vbo)
-    gl.glBindBuffer(gl.GL_ARRAY_BUFFER, vbo[0])
-    gl.glBufferData(gl.GL_ARRAY_BUFFER, ffi.sizeof(vertices), vertices, gl.GL_STATIC_DRAW);
+    gl.genBuffers(1, vbo)
+    gl.bindBuffer(gl.ARRAY_BUFFER, vbo[0])
+    gl.bufferData(gl.ARRAY_BUFFER, ffi.sizeof(vertices), vertices, gl.STATIC_DRAW);
 
     program = gl.createProgram(vertexSource, fragmentSource)
 
-    gl.glGenVertexArrays(1, vao);
-    gl.glBindVertexArray(vao[0]);
+    gl.genVertexArrays(1, vao);
+    gl.bindVertexArray(vao[0]);
 
-    posAttrib = gl.glGetAttribLocation(program, 'position')
-    gl.glVertexAttribPointer(posAttrib, 2, gl.GL_FLOAT, gl.GL_FALSE, 0, nil)
-    gl.glEnableVertexAttribArray(posAttrib)
+    posAttrib = gl.getAttribLocation(program, 'position')
+    gl.vertexAttribPointer(posAttrib, 2, gl.FLOAT, gl.FALSE, 0, nil)
+    gl.enableVertexAttribArray(posAttrib)
 
     render_test = _render
 end

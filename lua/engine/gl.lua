@@ -15,21 +15,21 @@ setmetatable(mod,mt)
 function mod.createShader(source, type)
     local buf  = ffi.new('char[?]', #source, source)
     local pbuf = ffi.new('const char*[1]', buf)
-    local shader = bind.glCreateShader(type)
-    bind.glShaderSource(shader, 1, pbuf, nil)
-    bind.glCompileShader(shader)
+    local shader = bind.createShader(type)
+    bind.shaderSource(shader, 1, pbuf, nil)
+    bind.compileShader(shader)
 
     -- Checking if a shader compiled successfully
     local status = ffi.new('GLint[1]',0)
-    bind.glGetShaderiv(shader, bind.GL_COMPILE_STATUS, status)
+    bind.getShaderiv(shader, bind.COMPILE_STATUS, status)
 
     -- TODO write to logging system instead of stdout
     local status = tonumber(status[0])
-    if status ~= bind.GL_TRUE then
+    if status ~= bind.TRUE then
         -- Retrieving the compile log
         -- TODO get required buffer
         local buffer = ffi.new 'char[512]'
-        bind.glGetShaderInfoLog(shader, 512, nil, buffer)
+        bind.getShaderInfoLog(shader, 512, nil, buffer)
         -- Write error log
         print('Compile shader FAILED.')
         print(ffi.string(buffer))
@@ -39,17 +39,17 @@ function mod.createShader(source, type)
 end
 
 function mod.getError()
-    local err = tonumber(bind.glGetError())
-    while err ~= bind.GL_NO_ERROR do
-        if err == bind.GL_INVALID_ENUM then
+    local err = tonumber(bind.getError())
+    while err ~= bind.NO_ERROR do
+        if err == bind.INVALID_ENUM then
             print('OpenGL Error: GL_INVALID_ENUM', err)
-        elseif err == bind.GL_INVALID_VALUE then
+        elseif err == bind.INVALID_VALUE then
             print('OpenGL Error: GL_INVALID_VALUE', err)
-        elseif err == bind.GL_INVALID_OPERATION then
+        elseif err == bind.INVALID_OPERATION then
             print('OpenGL Error: GL_INVALID_OPERATION', err)
-        elseif err == bind.GL_INVALID_FRAMEBUFFER_OPERATION then
+        elseif err == bind.INVALID_FRAMEBUFFER_OPERATION then
             print('OpenGL Error: GL_INVALID_FRAMEBUFFER_OPERATION', err)
-        elseif err == bind.GL_OUT_OF_MEMORY then
+        elseif err == bind.OUT_OF_MEMORY then
             print('OpenGL Error: GL_OUT_OF_MEMORY', err)
         end
     end
@@ -57,25 +57,25 @@ end
 
 function mod.createProgram(vert, frag)
     -- Purge error
-    bind.glGetError()
-    local program = bind.glCreateProgram()
+    bind.getError()
+    local program = bind.createProgram()
 
-    local vertexShader   = mod.createShader(vert, bind.GL_VERTEX_SHADER)
-    local fragmentShader = mod.createShader(frag, bind.GL_FRAGMENT_SHADER)
+    local vertexShader   = mod.createShader(vert, bind.VERTEX_SHADER)
+    local fragmentShader = mod.createShader(frag, bind.FRAGMENT_SHADER)
 
-    bind.glAttachShader(program, vertexShader)
-    bind.glAttachShader(program, fragmentShader)
+    bind.attachShader(program, vertexShader)
+    bind.attachShader(program, fragmentShader)
 
-    bind.glLinkProgram(program)
+    bind.linkProgram(program)
 
     local status = ffi.new('GLint[1]',0)
-    bind.glGetProgramiv(program, bind.GL_LINK_STATUS, status);
-    if status == bind.GL_FALSE then
+    bind.getProgramiv(program, bind.LINK_STATUS, status);
+    if status == bind.FALSE then
 	    local maxLength = ffi.new('GLint[1]',0);
-	    bind.glGetProgramiv(program, bind.GL_INFO_LOG_LENGTH, maxLength);
+	    bind.getProgramiv(program, bind.INFO_LOG_LENGTH, maxLength);
 	    -- The maxLength includes the NULL character
         local buf = ffi.new('GLchar[?]', maxLength)
-	    bind.glGetProgramInfoLog(program, maxLength[0], maxLength, buf);
+	    bind.getProgramInfoLog(program, maxLength[0], maxLength, buf);
         print('Progam linking FAILED.')
         print(buf)
     end
