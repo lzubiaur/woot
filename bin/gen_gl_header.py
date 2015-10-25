@@ -22,12 +22,14 @@ ignored_functions = ['glDebugMessageCallback']
 ignored_defines = ['GL_TIMEOUT_IGNORED']
 ignored_typdefs = ['APIENTRYP', 'APIENTRY']
 
+downcase = lambda s: s[:1].lower() + s[1:] if s else ''
+
 # Parse function names from glcorearb.h
 print('Parsing glcorearb.h header...')
 procs = []
 enums = []
 typedefs = []
-p1 = re.compile(r'GLAPI\s(.*)\sAPIENTRY\s(.*)')
+p1 = re.compile(r'GLAPI\s(.*)\sAPIENTRY\s(\w+)\s(.*);')
 p2 = re.compile(r'#define\s(GL_.*)\s(0x[0-9a-fA-F]+)')
 p3 = re.compile(r'typedef(.*)(GL.*);')
 with open('lib/gl3w/include/GL/glcorearb.h', 'r') as f:
@@ -37,7 +39,7 @@ with open('lib/gl3w/include/GL/glcorearb.h', 'r') as f:
         m3 = p3.match(line)
         if m1:
             if all(f not in m1.group(2) for f in ignored_functions):
-                procs.append(m1.group(1) + ' ' + m1.group(2))
+                procs.append(m1.group(1) + ' ' + downcase(m1.group(2)[2:]) + ' ' + m1.group(3) + ' asm("' + m1.group(2) + '");')
         if m2:
             if all(f not in m2.group(1) for f in ignored_defines):
                 enums.append(m2.group(1)[3:] + ' = ' + m2.group(2) + ',')
