@@ -27,17 +27,17 @@ function Viewport.create(width, height, windowName, isFullScreen)
     -- specify the client API version that the created context must be compatible with
     -- glfwCreateWindow will still fail if the resulting OpenGL version is less than the one requested
     -- ImGui requires OpenGL 3.3
-    glfw.WindowHint('CONTEXT_VERSION_MAJOR', 3);
-    glfw.WindowHint('CONTEXT_VERSION_MINOR', 3);
+    glfw.WindowHint('CONTEXT_VERSION_MAJOR', 3)
+    glfw.WindowHint('CONTEXT_VERSION_MINOR', 3)
     -- specifies which OpenGL profile to create the context for:
     -- OPENGL_CORE_PROFILE or OPENGL_COMPAT_PROFILE, or OPENGL_ANY_PROFILE.
     -- If requesting an OpenGL version *below* 3.2, OPENGL_ANY_PROFILE must be used
     -- We use OPENGL_CORE_PROFILE which only supports the new core functionality.
-    glfw.WindowHint('OPENGL_PROFILE', 'OPENGL_CORE_PROFILE');
+    glfw.WindowHint('OPENGL_PROFILE', 'OPENGL_CORE_PROFILE')
     if (jit.os == 'OSX') then
         -- OpenGL context should be forward-compatible (all functionality deprecated in the requested version of OpenGL is removed)
         -- This may only be used if the requested OpenGL version is 3.0 or above.
-        glfw.WindowHint('OPENGL_FORWARD_COMPAT', 1);
+        glfw.WindowHint('OPENGL_FORWARD_COMPAT', 1)
     end
     -- Don't allow resizable window
     glfw.WindowHint('RESIZABLE', 0)
@@ -75,7 +75,7 @@ function Viewport.run()
         -- Poll for and process events
         glfw.PollEvents()
 
-        delta = (prev_time > 0.0) and (glfw.GetTime() - g_Time) or (1.0/60.0);
+        delta = (prev_time > 0.0) and (glfw.GetTime() - g_Time) or (1.0/60.0)
         for _,node in ipairs(scene_tree) do
             node.process(delta)
         end
@@ -83,8 +83,8 @@ function Viewport.run()
         -- Clean buffer
         gl.clearColor(0.3,0.28,0.35,1)
         local width, height = glfw.GetFramebufferSize(window)
-        gl.viewport(0, 0, width, height);
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.viewport(0, 0, width, height)
+        gl.clear(gl.COLOR_BUFFER_BIT)
 
         -- Render the scene tree
         for _,node in ipairs(scene_tree) do
