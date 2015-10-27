@@ -23,44 +23,6 @@ parser.add_argument('-a', '--all', action='store_true',
 
 args = parser.parse_args()
 
-# Path to search for OpenGL occurrences
-src_paths = [ './lua', './tests/lua' ]
-
-used_functions = []
-used_defines = []
-# OpenGL functions regex. Word prefixed with `gl.` or `bind.` and followed with some whitespace and a round bracket.
-p1 = re.compile(r'(gl\.|bind\.)(\w+)\s*\(')
-# OpenGL constants (aka define) regex. Only uppercase word prefixed with `gl.` or `bind.`
-p2 = re.compile(r'(gl\.|bind\.)([A-Z0-9_]+)')
-
-if not args.all:
-    for src_path in src_paths:
-        for path, dirs, files in os.walk(src_path):
-            for filename in files:
-                if not os.path.splitext(filename)[1] == '.lua':
-                    continue
-                fullpath = os.path.join(path, filename)
-                print(fullpath)
-                with open(fullpath, 'r') as f:
-                    for line in f:
-                        m1 = p1.findall(line)
-                        for m in m1:
-                            if not m[1].startswith('glfw'):
-                                used_functions.append(m[1])
-                        m2 = p2.findall(line)
-                        for m in m2:
-                            used_defines.append(m[1])
-
-    used_functions = list(set(used_functions))
-    used_functions.sort()
-    for function in used_functions:
-        print(function)
-
-    used_defines = list(set(used_defines))
-    used_defines.sort()
-    for define in used_defines:
-        print(define)
-
 ignored_functions = ['glDebugMessageCallback', 'glDebugMessageCallbackARB']
 # GL_TIMEOUT_IGNORED is defined with the value 0xFFFFFFFFFFFFFFFFull which
 # crashes (Segmentation fault) in the LuaJIT FFI cdef function
@@ -82,38 +44,26 @@ def func_t(m):
           'name': downcase(m.group(2)[2:]),  # Strip function name (without the `gl` prefix)
           'cname': m.group(2),               # Canonical function name (as in the C API)
           'param': m.group(3) }              # Function parameter list (including the brackets)
-
     if any(f == t['cname'] for f in ignored_functions):
         return
-
-    if not args.all and all(f != t['name'] for f in used_functions):
-        return
-
     procs.append(t)
 
 def def_t(m):
     t = { 'name': m.group(1)[3:],            # The `GL_` prefix is removed from the OpenGL define name
           'cname': m.group(1),               # Canonical OpenGL define name
           'value': m.group(2) }
-
     if any(f == t['cname'] for f in ignored_defines):
         return
-
-    if not args.all and all(f != t['name'] for f in used_defines):
-        return
-
     enums.append(t)
 
 def typedef_t(m):
     t = { 'name': m.group(2),
           'type': m.group(1) }
-
     if any(f in m.group(0) for f in ignored_typdefs):
         return
-
     typedefs.append(t)
 
-# Regular expressions for functions, defines and typdefs
+# Regex for functions, defines and typdefs
 p = [ [ re.compile(r'GLAPI\s(.*)\sAPIENTRY\s(\w+)\s(.*);'), func_t ],
       [ re.compile(r'#define\s*(GL_\w+)\s*(0x[0-9a-fA-F]+)'), def_t ],
       [ re.compile(r'typedef(.*)(GL.*);'), typedef_t] ]
@@ -133,6 +83,47 @@ enums.sort()
 # Remove duplicates
 # typedefs = list(set(typedefs))
 typedefs.sort()
+
+if not args.all:
+    used_functions = []
+    used_defines = []
+    # OpenGL functions regex. Function name must be prefixed with a module name
+    # and a dot (e.g. `gl.`), followed with whitespaces (optional) and a round bracket.
+    p1 = re.compile(r'\w+\.(\w+)\s*\(')
+    # OpenGL constants (aka define) regex. Only uppercase words prefixed with a module name
+    # followed by a dot are considered.
+    p2 = re.compile(r'\w+\.([A-Z0-9_]+)')
+    # Path to search for OpenGL occurrences
+    src_paths = [ './lua', './tests/lua' ]
+    for src_path in src_paths:
+        for path, dirs, files in os.walk(src_path):
+            for filename in files:
+                if not os.path.splitext(filename)[1] == '.lua':
+                    continue
+                fullpath = os.path.join(path, filename)
+                print('Parsing file {}...'.format(fullpath))
+                with open(fullpath, 'r') as f:
+                    for line in f:
+                        m1 = p1.findall(line)
+                        if m1:
+                            for p in procs:
+                                if any(m == p['name'] for m in m1):
+                                    print('Found new OpenGL function "{0[name]}"'.format(p))
+                                    used_functions.append(p)
+                                    procs.remove(p)
+                        m2 = p2.findall(line)
+                        if m2:
+                            print(m2)
+                            for e in enums:
+                                if any(m == e['name'] for m in m2):
+                                    print('Found new OpenGL constant "{0[name]}"'.format(e))
+                                    used_defines.append(e)
+                                    enums.remove(e)
+
+    used_functions.sort()
+    used_defines.sort()
+    procs = used_functions
+    enums = used_defines
 
 # Generate gen_h.lua
 print('Generating gl_h.lua in lua/engine...')
