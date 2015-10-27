@@ -76,31 +76,58 @@ procs = []      # List of functions
 enums = []      # List of defines (will be converted into enum in Lua FFI)
 typedefs = []   # List ot typedef
 
-# Regular expressions for functions, defines and typdefs
-p1 = re.compile(r'GLAPI\s(.*)\sAPIENTRY\s(\w+)\s(.*);')
-p2 = re.compile(r'#define\s*(GL_\w+)\s*(0x[0-9a-fA-F]+)')
-p3 = re.compile(r'typedef(.*)(GL.*);')
-
 # Split a regular expression into
 def func_t(m):
-    return { 'rt': m.group(1),                  # Return type
-             'name': downcase(m.group(2)[2:]),  # Strip function name (without the `gl` prefix)
-             'cname': m.group(2),               # Canonical function name (as in the C API)
-             'param': m.group(3)}               # Function parameter list (including the brackets)
+    t = { 'rt': m.group(1),                  # Return type
+          'name': downcase(m.group(2)[2:]),  # Strip function name (without the `gl` prefix)
+          'cname': m.group(2),               # Canonical function name (as in the C API)
+          'param': m.group(3) }              # Function parameter list (including the brackets)
+
+    if any(f == t['cname'] for f in ignored_functions):
+        return
+
+    if not args.all and all(f != t['name'] for f in used_functions):
+        return
+
+    procs.append(t)
+
+def def_t(m):
+    t = { 'name': m.group(1)[3:],            # The `GL_` prefix is removed from the OpenGL define name
+          'cname': m.group(1),               # Canonical OpenGL define name
+          'value': m.group(2) }
+
+    if any(f == t['cname'] for f in ignored_defines):
+        return
+
+    if not args.all and all(f != t['name'] for f in used_defines):
+        return
+
+    enums.append(t)
+
+def typedef_t(m):
+    t = { 'name': m.group(2),
+          'type': m.group(1) }
+
+    if any(f in m.group(0) for f in ignored_typdefs):
+        return
+
+    typedefs.append(t)
+
+# Regular expressions for functions, defines and typdefs
+p = [ [ re.compile(r'GLAPI\s(.*)\sAPIENTRY\s(\w+)\s(.*);'), func_t ],
+      [ re.compile(r'#define\s*(GL_\w+)\s*(0x[0-9a-fA-F]+)'), def_t ],
+      [ re.compile(r'typedef(.*)(GL.*);'), typedef_t] ]
 
 # Parse function names, defines and typedefs from glcorearb.h
 print('Parsing glcorearb.h header...')
 with open('lib/gl3w/include/GL/glcorearb.h', 'r') as f:
     for line in f:
-        m1 = p1.match(line)
-        m2 = p2.match(line)
-        m3 = p3.match(line)
-        if m1 and all(f not in m1.group(2) for f in ignored_functions) and any(f == downcase(m1.group(2)[2:]) for f in used_functions):
-                procs.append(m1.group(1) + ' ' + downcase(m1.group(2)[2:]) + ' ' + m1.group(3) + ' asm("' + m1.group(2) + '");')
-        if m2 and all(f not in m2.group(1) for f in ignored_defines) and any(f == m2.group(1)[3:] for f in used_defines):
-                enums.append(m2.group(1)[3:] + ' = ' + m2.group(2) + ',')
-        if m3 and all(f not in m3.group(0) for f in ignored_typdefs):
-                typedefs.append(m3.group(0))
+        for _p in p:
+            m = _p[0].match(line)
+            if m:
+                _p[1](m)
+                continue
+
 procs.sort()
 enums.sort()
 # Remove duplicates
@@ -114,8 +141,8 @@ with open('lua/engine/gl_h.lua', 'wb') as f:
 ffi.cdef [[
 /* OpenGL typedef */
 ''')
-    for typedef in typedefs:
-        f.write(typedef + '\n')
+    for t in typedefs:
+        f.write('typedef {0[type]} {0[name]};\n'.format(t).encode('utf-8'))
     f.write('''
 /* OpenGL defines */
 enum {
@@ -126,13 +153,13 @@ ONE      = 1,
 NONE     = 0,
 NO_ERROR = 0,
 ''')
-    for enum in enums:
-        f.write(enum + '\n')
+    for e in enums:
+        f.write('{0[name]} = {0[value]},\n'.format(e).encode('utf-8'))
     f.write('''
 };
 /* OpenGL functions */
 ''')
 
-    for proc in procs:
-        f.write(proc + '\n')
+    for p in procs:
+        f.write('{0[rt]} {0[name]}{0[param]} asm("{0[cname]}");\n'.format(p).encode('utf-8'))
     f.write(b']]\n')
