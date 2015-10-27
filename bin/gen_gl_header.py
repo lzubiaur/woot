@@ -61,7 +61,7 @@ if not args.all:
     for define in used_defines:
         print(define)
 
-ignored_functions = ['glDebugMessageCallback']
+ignored_functions = ['glDebugMessageCallback', 'glDebugMessageCallbackARB']
 # GL_TIMEOUT_IGNORED is defined with the value 0xFFFFFFFFFFFFFFFFull which
 # crashes (Segmentation fault) in the LuaJIT FFI cdef function
 # Note that GL_INVALID_INDEX is defined with 0xFFFFFFFFu and will be defined with 0xFFFFFFFF
