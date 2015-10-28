@@ -19,7 +19,7 @@ import argparse
 parser = argparse.ArgumentParser()
 
 parser.add_argument('-a', '--all', action='store_true',
-    help="Generate Lua binding for all OpenGL functions and constants")
+    help="Generate the amalgamation OpenGL header for Lua FFI binding")
 
 args = parser.parse_args()
 
@@ -84,6 +84,7 @@ enums.sort()
 # typedefs = list(set(typedefs))
 typedefs.sort()
 
+# If not generating the amalgamation header, we look for OpenGL references in the Lua code
 if not args.all:
     used_functions = []
     used_defines = []
