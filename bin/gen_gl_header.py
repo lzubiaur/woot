@@ -86,20 +86,23 @@ typedefs.sort()
 
 # If not generating the amalgamation header, we look for OpenGL references in the Lua code
 if not args.all:
+    # Paths to search recursively for OpenGL occurrences
+    lua_src_paths  = [ './lua', './tests/lua' ]
+    ignored_files  = ['glfw.lua']
     used_functions = []
-    used_defines = []
+    used_defines   = []
     # OpenGL functions regex. Function name must be prefixed with a module name
     # and a dot (e.g. `gl.`), followed with whitespaces (optional) and a round bracket.
     p1 = re.compile(r'\w+\.(\w+)\s*\(')
     # OpenGL constants (aka define) regex. Only uppercase words prefixed with a module name
     # followed by a dot are considered.
     p2 = re.compile(r'\w+\.([A-Z_][A-Z0-9_]+)\b')
-    # Path to search for OpenGL occurrences
-    src_paths = [ './lua', './tests/lua' ]
-    for src_path in src_paths:
+    for src_path in lua_src_paths:
         for path, dirs, files in os.walk(src_path):
             for filename in files:
                 if not os.path.splitext(filename)[1] == '.lua':
+                    continue
+                if any(f == filename for f in ignored_files):
                     continue
                 fullpath = os.path.join(path, filename)
                 print('Parsing file {}...'.format(fullpath))
