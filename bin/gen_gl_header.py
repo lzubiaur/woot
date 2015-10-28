@@ -92,7 +92,7 @@ if not args.all:
     p1 = re.compile(r'\w+\.(\w+)\s*\(')
     # OpenGL constants (aka define) regex. Only uppercase words prefixed with a module name
     # followed by a dot are considered.
-    p2 = re.compile(r'\w+\.([A-Z0-9_]+)')
+    p2 = re.compile(r'\w+\.([A-Z_][A-Z0-9_]+)\b')
     # Path to search for OpenGL occurrences
     src_paths = [ './lua', './tests/lua' ]
     for src_path in src_paths:
@@ -113,7 +113,6 @@ if not args.all:
                                     procs.remove(p)
                         m2 = p2.findall(line)
                         if m2:
-                            print(m2)
                             for e in enums:
                                 if any(m == e['name'] for m in m2):
                                     print('Found new OpenGL constant "{0[name]}"'.format(e))
