@@ -91,7 +91,7 @@ typedefs.sort()
 if not args.all:
     # Paths to search recursively for OpenGL occurrences
     lua_src_paths  = [ './lua', './tests/lua' ]
-    ignored_files  = ['glfw.lua']
+    ignored_files  = ['glfw.lua', 'gl3w.lua', 'gl_h.lua']
     used_functions = []
     used_defines   = []
     # OpenGL functions regex. Function name must be prefixed with a module name
