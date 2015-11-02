@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-# Generate OpenGL header for Lua FFI binding
+# Generate OpenGL header for Lua FFI binding.
+# This script can generate an amalgamation header (`--all` option) with all
+# OpenGL functions and constants or it can look for OpenGL references in the Lua
+# source code and only include used function/constants in the FFI headers.
 # OpenGL functions and constants lose their gl/GL prefix in Lua.
 # See this post regarding renaming functions with LuaJIT FFI.
 # http://lua-users.org/lists/lua-l/2011-07/msg00484.html
@@ -64,7 +67,7 @@ def typedef_t(m):
     typedefs.append(t)
 
 # Regex for functions, defines and typdefs
-p = [ [ re.compile(r'GLAPI\s(.*)\sAPIENTRY\s(\w+)\s(.*);'), func_t ],
+p = [ [ re.compile(r'GLAPI\s(.*)APIENTRY\s(\w+)\s(.*);'), func_t ],
       [ re.compile(r'#define\s*(GL_\w+)\s*(0x[0-9a-fA-F]+)'), def_t ],
       [ re.compile(r'typedef(.*)(GL.*);'), typedef_t] ]
 
