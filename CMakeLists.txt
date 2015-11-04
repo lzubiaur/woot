@@ -6,6 +6,9 @@ option(ENGINE_BUILD_TESTS "Build the Engine tests programs" ON)
 # Set the Application bundle name (.app will be added on OSX).
 set(BUNDLE_NAME ${PROJECT_NAME})
 
+# Compile the documentation guide to html (require MkDocs)
+# https://github.com/mkdocs/mkdocs/
+set(BUILD_DOCS ON)
 #
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 ################################################################################
@@ -66,6 +69,9 @@ if(ENGINE_BUILD_TESTS)
     add_subdirectory(tests)
 endif()
 add_subdirectory(src)
+if(BUILD_DOCS)
+    add_subdirectory(docs)
+endif()
 
 install(DIRECTORY lua DESTINATION ${BUNDLE_RESOURCE_PREFIX} COMPONENT Runtime)
 # Copy the content of the res folder into the package resource directory
