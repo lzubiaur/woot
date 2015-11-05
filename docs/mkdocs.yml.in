@@ -2,6 +2,7 @@ docs_dir: @DOCS_DIR@
 site_dir: @SITE_DIR@
 site_name: @PROJECT_NAME@
 site_author: @AUTHOR@
+use_directory_urls: @USE_DIRECTORY_URLS@
 site_description:  @PROJECT_NAME@ documentation
 repo_url: https://github.com/lzubiaur/woot
 copyright: @COPYRIGHT@
