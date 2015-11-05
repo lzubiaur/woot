@@ -20,6 +20,9 @@ project(${PROJECT_NAME} C CXX)
 
 set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/products/${CMAKE_BUILD_TYPE})
 
+# Add custom cmake modules
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+
 if(BUILD_OSX)
     set(BUNDLE_NAME "${BUNDLE_NAME}.app")
     set(BUNDLE_RESOURCE_PREFIX "${BUNDLE_NAME}/Contents/Resources")
