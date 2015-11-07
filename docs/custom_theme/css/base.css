@@ -120,14 +120,14 @@ div.col-md-9 img {
 }
 
 .banner {
-    background-color: #83A300;
+    background-color: #bcd35f;
     height: 230px;
     text-shadow: 0 1px 3px rgba(1,0,0,.4), 0 0 0px rgba(0,0,0,.0);
     box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);
 }
 
 .banner-small {
-    background-color: #83A300;
+    background-color: #bcd35f;
     height: 10px;
     box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);
 }
