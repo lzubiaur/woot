@@ -14,6 +14,7 @@ pages:
     - MacOSX: README.osx.md
 - About:
     - 'Release Notes': 'release-notes.md'
-# Themes:
-# mkdocs, bootstrap, readthedoc, amelia, cerulean
-theme: bootstrap
+theme: united
+theme_dir: @DOCS_DIR@/custom_theme
+extra:
+    version: @PROJECT_VERSION@
