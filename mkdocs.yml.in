@@ -1,0 +1,20 @@
+docs_dir: @DOCS_DIR@
+site_dir: @SITE_DIR@
+site_name: @PROJECT_NAME@
+site_author: @AUTHOR@
+use_directory_urls: @USE_DIRECTORY_URLS@
+site_description:  @PROJECT_NAME@ documentation
+repo_url: https://github.com/lzubiaur/woot
+copyright: @COPYRIGHT@
+pages:
+- Home: index.md
+- Installation:
+    - Linux: README.linux.md
+    - Windows: README.windows.md
+    - MacOSX: README.osx.md
+- About:
+    - 'Release Notes': 'release-notes.md'
+theme: united
+theme_dir: @DOCS_DIR@/custom_theme
+extra:
+    version: @PROJECT_VERSION@

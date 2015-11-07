@@ -1,0 +1,20 @@
+docs_dir: .
+site_dir: _site
+site_name: Woot
+site_author: Laurent Zubiaur
+use_directory_urls: false
+site_description:  Woot documentation
+repo_url: https://github.com/lzubiaur/woot
+copyright: Laurent Zubiaur © 2015
+pages:
+- Home: index.md
+- Installation:
+    - Linux: README.linux.md
+    - Windows: README.windows.md
+    - MacOSX: README.osx.md
+- About:
+    - 'Release Notes': 'release-notes.md'
+theme: united
+theme_dir: custom_theme
+extra:
+    version: 0.1b

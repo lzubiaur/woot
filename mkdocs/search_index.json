@@ -1,0 +1,34 @@
+{
+    "docs": [
+        {
+            "location": "/index.html", 
+            "text": "Welcome to the documentation", 
+            "title": "Home"
+        }, 
+        {
+            "location": "/index.html#welcome-to-the-documentation", 
+            "text": "", 
+            "title": "Welcome to the documentation"
+        }, 
+        {
+            "location": "/README.linux/index.html", 
+            "text": "Build on Linux (Debian/Ubuntu)\n\n\nBuild tested on debian 8 (jessie) and Ubuntu 15.04 64bit.\n\n\ngit clone http://github.com/lzubiaur/woot\ncd woot\n./bin/build-linux.sh\n\n\n\n\nDependencies - Required packages\n\n\n\n\ncmake (3.3)\n\n\ngcc (should be installed with cmake)\n\n\ngit-core (to clone the porject)\n\n\ng++ (C++ compiler)\n\n\nlibgl1-mesa-dev (OpenGL development libraries)\n\n\nxorg-dev\n\n\n\n\nsudo apt-get install cmake git-core g++ libgl1-mesa-dev xorg-dev\n\n\n\n\nDebugging\n\n\nList the executable dependencies \nldd \nexecutable\n\n\nCheck that the rpath are correct using \npatchelf --print-rpath \nexecutable\n\n\nDisplay ELF executable information \nreadelf -d \nexecutabl", 
+            "title": "Linux"
+        }, 
+        {
+            "location": "/README.windows/index.html", 
+            "text": "Build on Windows\n\n\nBuild tested on Windows 10 (32bits) using Visual Studio Express 2015.\n\n\nOpen a git bash\n\n\ngit clone http://github.com/lzubiaur/woot\ncd woot\n./bin/build-linux.sh\n\n\n\n\nRequirements\n\n\n\n\nCMake (3.3)\n\n\nGit (only to clone the project)\n\n\nVisual Studio Express 2015 (for Desktop)\n\n\n\n\nDebug\n\n\nIf \nbuild-win.bat\n can't find the CMake executable (cmake.exe) please make sure the CMake bin directory is set in your PATH environment variable.\nIf not add to the current console session it as follow.\n\n\nset PATH=\npath-to-cmake-install\n\\bin;%PATH%", 
+            "title": "Windows"
+        }, 
+        {
+            "location": "/README.osx/index.html", 
+            "text": "", 
+            "title": "MacOSX"
+        }, 
+        {
+            "location": "/release-notes/index.html", 
+            "text": "", 
+            "title": "Release Notes"
+        }
+    ]
+}
