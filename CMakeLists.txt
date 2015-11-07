@@ -53,6 +53,16 @@ elseif(BUILD_WIN)
    set(BUNDLE_RESOURCE_PREFIX "${BUNDLE_NAME}")
 endif(BUILD_OSX)
 
+# Internal version number for the Woot game engine
+set(ENGINE_NAME "Woot")
+set(ENGINE_COPYRIGHT "Copyright (C) 2015 Laurent Zubiaur")
+set(ENGINE_VERSION_MAJOR "0")
+set(ENGINE_VERSION_MINOR "1")
+set(ENGINE_VERSION_PATCH "1")
+set(ENGINE_VERSION_EXTRA "b")
+set(ENGINE_VERSION "${ENGINE_VERSION_MAJOR}.${ENGINE_VERSION_MINOR}")
+set(ENGINE_VERSION_FULL "${ENGINE_VERSION}.${ENGINE_VERSION_PATCH}${ENGINE_VERSION_EXTRA}")
+
 # Output directories for runtime, library and archive (static library).
 # We must defined an explicit output destination because fixup_bundle
 # needs to know where to find the dependencies.

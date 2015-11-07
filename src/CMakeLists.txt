@@ -1,15 +1,5 @@
 cmake_minimum_required(VERSION 3.3)
 
-# Internal version number for the Woot game engine
-set(ENGINE_NAME "Woot")
-set(ENGINE_COPYRIGHT "Copyright (C) 2015 Laurent Zubiaur")
-set(ENGINE_VERSION_MAJOR "0")
-set(ENGINE_VERSION_MINOR "1")
-set(ENGINE_VERSION_PATCH "1")
-set(ENGINE_VERSION_EXTRA "b")
-set(ENGINE_VERSION "${ENGINE_VERSION_MAJOR}.${ENGINE_VERSION_MINOR}")
-set(ENGINE_VERSION_FULL "${ENGINE_VERSION}.${ENGINE_VERSION_PATCH}${ENGINE_VERSION_EXTRA}")
-
 configure_file("config.h.in" "${PROJECT_BINARY_DIR}/config.h")
 
 include_directories(${GLFW_HEADERS} ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR})
