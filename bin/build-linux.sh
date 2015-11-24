@@ -1,9 +1,9 @@
 #!/bin/sh
 
 if ! [ -f "lib/gl3w/src/gl3w.c" ]; then
-  pushd lib/gl3w 
+  cd lib/gl3w 
   ./gl3w_gen.py
-  popd
+  cd ../..
 fi
 
 if ! [ -d "build/linux" ]; then
