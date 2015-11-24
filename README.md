@@ -1,5 +1,7 @@
 ![WOOT](/docs/logo.png)
 
+[![Build Status](https://travis-ci.org/lzubiaur/woot.svg?branch=master)](https://travis-ci.org/lzubiaur/woot)
+
 ### Introduction
 
 > This is a *work-in-progress* project and is subject to change without notice.
