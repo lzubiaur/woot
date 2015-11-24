@@ -1,4 +1,11 @@
 #!/bin/sh
+
+if ! [ -f "lib/gl3w/src/gl3w.c" ]; then
+  pushd lib/gl3w 
+  ./gl3w_gen.py
+  popd
+fi
+
 if ! [ -d "build/linux" ]; then
     mkdir -p "build/linux"
 fi
