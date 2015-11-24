@@ -8,7 +8,7 @@ set(BUNDLE_NAME ${PROJECT_NAME})
 
 # Compile the documentation guide to html (require MkDocs)
 # https://github.com/mkdocs/mkdocs/
-set(BUILD_DOCS ON)
+set(BUILD_DOCS OFF)
 #
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 ################################################################################
